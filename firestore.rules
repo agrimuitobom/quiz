@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// QuoliQ 用 Firestore セキュリティルール
+// QualiQ 用 Firestore セキュリティルール
 service cloud.firestore {
   match /databases/{database}/documents {
 
