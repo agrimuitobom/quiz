@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuailQ - 総合検定・過去問＆学習プラットフォーム</title>
+    <title>QuailQ - 総合検定・練習問題＆学習プラットフォーム</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -59,7 +59,7 @@
             </div>
             <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">QuailQ</h1>
             <p class="text-blue-200 text-sm sm:text-base max-w-xs mx-auto mb-8 font-light">
-                あらゆる検定・資格に対応！<br>全カテゴリ20問・完全網羅過去問学習
+                あらゆる検定・資格に対応！<br>各検定20問のオリジナル練習問題で学習
             </p>
             <div class="flex items-center justify-center space-x-2 text-sm text-blue-300">
                 <i class="fa-solid fa-spinner fa-spin"></i>
@@ -217,17 +217,17 @@
                     </div>
                 </div>
 
-                <!-- 最新年度 ＆ 総合過去問 Quick Access -->
+                <!-- 総合ミックス ＆ カテゴリ別ミックス Quick Access -->
                 <div class="grid md:grid-cols-2 gap-6 pt-4">
                     <!-- 全検定総合最新実力テスト -->
                     <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-white shadow-lg flex flex-col justify-between">
                         <div>
                             <div class="flex items-center space-x-2 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
-                                <span class="px-2 py-0.5 bg-amber-400/20 rounded">最新年度</span>
-                                <span>2026 / 令和8年度問題</span>
+                                <span class="px-2 py-0.5 bg-amber-400/20 rounded">ランダム出題</span>
+                                <span>全検定から重複なしで抽出</span>
                             </div>
                             <h3 class="text-xl font-bold mb-2">全検定ミックス 20問総合判定テスト</h3>
-                            <p class="text-slate-300 text-sm mb-6">全ジャンルの過去問データベースからランダムに20問を抽出。総合思考力を完全判定します。</p>
+                            <p class="text-slate-300 text-sm mb-6">全検定の練習問題から重複なしでランダムに20問を抽出します。選択肢の並びも毎回シャッフルされます。</p>
                         </div>
                         <button onclick="startExam('latest')" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center space-x-2">
                             <span>総合20問演習をスタート</span>
@@ -235,31 +235,31 @@
                         </button>
                     </div>
 
-                    <!-- 年度別過去問 -->
+                    <!-- カテゴリ別ミックス -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex items-center space-x-2 text-brand-600 text-xs font-bold uppercase tracking-wider mb-2">
-                                <span class="px-2 py-0.5 bg-brand-50 rounded">アーカイブ</span>
-                                <span>年度指定20問演習</span>
+                                <span class="px-2 py-0.5 bg-brand-50 rounded">分野指定</span>
+                                <span>カテゴリ別20問演習</span>
                             </div>
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">年度別 20問過去問アーカイブ</h3>
-                            <p class="text-slate-500 text-sm mb-4">希望する実施年度の過去問を一括で20問演習。全問終了後に解答・解説を確認可能です。</p>
-                            <select id="year-select" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 mb-4">
-                                <option value="2026">令和8年度 (2026年) 最新傾向問題 (20問)</option>
-                                <option value="2025">令和7年度 (2025年) 過去問 (20問)</option>
-                                <option value="2024">令和6年度 (2024年) 過去問 (20問)</option>
-                                <option value="2023">令和5年度 (2023年) 過去問 (20問)</option>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">カテゴリ別 20問ミックス</h3>
+                            <p class="text-slate-500 text-sm mb-4">選んだ分野の検定から重複なしでランダムに20問を出題します。全問終了後に解答・解説を確認できます。</p>
+                            <select id="mix-category-select" class="w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500 mb-4">
+                                <option value="IT・情報系">IT・情報系</option>
+                                <option value="語学・国際">語学・国際</option>
+                                <option value="ビジネス・会計・法律">ビジネス・会計・法律</option>
+                                <option value="教養・学術・その他">教養・学術・その他</option>
                             </select>
                         </div>
-                        <button onclick="startExamByYear()" class="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center space-x-2">
-                            <span>指定年度で20問演習開始</span>
+                        <button onclick="startExamByCategory()" class="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center space-x-2">
+                            <span>選んだ分野で20問演習開始</span>
                             <i class="fa-solid fa-play"></i>
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. 過去問演習/問題解答画面 View -->
+            <!-- 2. 問題演習/問題解答画面 View -->
             <section id="view-exam" class="hidden space-y-6 fade-in max-w-3xl mx-auto">
                 <!-- 固定ヘッダー（進捗・タイマー・終了） -->
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
@@ -448,6 +448,10 @@
                             <p class="text-xs text-slate-500 mt-1">すべての検定カテゴリ・問題セットは「全20問」に統一して作成・構成されています。</p>
                         </div>
                         <div class="border-b border-slate-100 pb-3">
+                            <h4 class="font-bold text-slate-700 text-sm">Q. 収録されているのは実際の過去問ですか？</h4>
+                            <p class="text-xs text-slate-500 mt-1">いいえ。各検定の出題範囲を参考に作成したオリジナルの練習問題です。実際の試験問題・過去問ではありません。最新の出題範囲や制度は各試験の公式情報をご確認ください。</p>
+                        </div>
+                        <div class="border-b border-slate-100 pb-3">
                             <h4 class="font-bold text-slate-700 text-sm">Q. 自分の受けたい検定がない場合はどうすればいいですか？</h4>
                             <p class="text-xs text-slate-500 mt-1">「オリジナル検定作成」ボタンから、オリジナルの検定名と問題を自由に追加して学習することができます。</p>
                         </div>
@@ -503,7 +507,7 @@
                         </div>
                         <h3 class="text-lg font-bold mb-2">全検定 20問統一版プラットフォーム</h3>
                         <p class="text-slate-300 text-xs leading-relaxed mb-4">
-                            IT・語学・ビジネス・教養など全カテゴリーで20問ずつの実戦的過去問セットを提供。
+                            IT・語学・ビジネス・教養など全カテゴリーで20問ずつのオリジナル練習問題セットを提供。
                         </p>
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between items-center">
@@ -536,7 +540,7 @@
         </div>
 
         <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-            <p>© 2026 QuailQ - 総合検定・過去問＆資格学習プラットフォーム (各検定20問収録)</p>
+            <p>© 2026 QuailQ - 総合検定・資格学習プラットフォーム (各検定20問収録)</p>
         </footer>
     </div>
 
@@ -723,29 +727,155 @@
             { title: "【日商簿記 問20】複式簿記において、借方合計額と貸方合計額が常に一致する原則を何と呼ぶか。", options: ["貸借平均の原則", "発生主義の原則", "継続性の原則", "明瞭性の原則"], correctIndex: 0, explanation: "すべての仕訳で借方と貸方の金額が必ず同額になる原則を「貸借平均の原則」と呼びます。" }
         ];
 
-        // 各ジャンルの20問生成（指定なき場合汎用20問セットを出力）
-        function create20QuestionsFor(examId, examName, category) {
-            if (examId === 'itpass') return ITPASS_QUESTIONS;
-            if (examId === 'eiken' || examId === 'toeic') return EIKEN_QUESTIONS;
-            if (examId === 'boki' || examId === 'fp' || examId === 'takken') return BOKI_QUESTIONS;
-
-            // その他の検定向けに個別の20問サンプルを組み立て
-            const list = [];
-            for (let i = 1; i <= 20; i++) {
-                list.push({
-                    title: `【${examName} 第${i}問】${examName}の基本原理・応用に関する実践設問 (問${i})`,
-                    options: [
-                        `正解の選択肢知識パターン A-${i}`,
-                        `誤りの選択肢パターン B-${i}`,
-                        `誤りの選択肢パターン C-${i}`,
-                        `誤りの選択肢パターン D-${i}`
-                    ],
-                    correctIndex: 0,
-                    explanation: `${examName}の第${i}問に関する詳細解説です。用語の正しい理解と実践的な知識が必要とされる設問です。`
-                });
-            }
-            return list;
+        // 問題セット生成ヘルパー
+        // rows: [問題文, [正解, 誤答1, 誤答2, 誤答3], 解説]
+        // データ上は正解を先頭に書き、出題時に選択肢をシャッフルする
+        function buildSet(label, rows) {
+            return rows.map(([q, opts, explanation], i) => ({
+                title: `【${label} 問${i + 1}】${q}`,
+                options: opts,
+                correctIndex: 0,
+                explanation
+            }));
         }
+
+        const FE_QUESTIONS = buildSet('基本情報', [
+            ["10進数の13を2進数で表したものはどれか。", ["1101", "1011", "1110", "1001"], "13 = 8 + 4 + 1 なので、2進数では 1101 になります。"],
+            ["後に格納したデータを先に取り出す（LIFO）データ構造はどれか。", ["スタック", "キュー", "リスト", "ヒープ"], "スタックは後入れ先出し（LIFO）、キューは先入れ先出し（FIFO）のデータ構造です。"],
+            ["先に格納したデータを先に取り出す（FIFO）データ構造はどれか。", ["キュー", "スタック", "二分木", "ハッシュ表"], "キューは先入れ先出し（FIFO）で、待ち行列の処理などに使われます。"],
+            ["要素数nの整列済み配列に対する二分探索の平均計算量はどれか。", ["O(log n)", "O(n)", "O(n log n)", "O(n²)"], "二分探索は探索範囲を毎回半分にするため、計算量は O(log n) です。"],
+            ["16進数の FF を10進数で表したものはどれか。", ["255", "256", "240", "15"], "FF = 15×16 + 15 = 255 です。"],
+            ["2つの入力が異なるときにだけ1を出力する論理演算はどれか。", ["排他的論理和（XOR）", "論理積（AND）", "論理和（OR）", "否定論理積（NAND）"], "XOR は入力が異なるとき1、同じとき0を出力します。"],
+            ["MTBFが450時間、MTTRが50時間の装置の稼働率はどれか。", ["0.90", "0.80", "0.95", "0.89"], "稼働率 = MTBF ÷ (MTBF + MTTR) = 450 ÷ 500 = 0.90 です。"],
+            ["稼働率0.9の装置2台を並列に接続したシステム（どちらか1台が動けばよい）の稼働率はどれか。", ["0.99", "0.81", "0.90", "0.95"], "並列系の稼働率 = 1 − (1 − 0.9)² = 1 − 0.01 = 0.99 です。"],
+            ["キャッシュメモリを設ける主な目的はどれか。", ["CPUと主記憶装置の処理速度の差を埋める", "主記憶装置の容量を仮想的に拡大する", "電源断時にデータを保持する", "外部記憶装置の故障に備える"], "キャッシュメモリは高速な小容量メモリで、CPUと主記憶の速度差を緩和します。容量の仮想的な拡大は仮想記憶の役割です。"],
+            ["RAID1の特徴として適切なものはどれか。", ["同じデータを複数のディスクに書き込むミラーリング", "データを分散して書き込むストライピングのみを行う", "パリティを1台のディスクに集中して記録する", "パリティを複数ディスクに分散して記録する"], "RAID1はミラーリング、RAID0はストライピング、RAID5はパリティを分散記録する方式です。"],
+            ["DNSの役割として適切なものはどれか。", ["ドメイン名とIPアドレスを対応付ける", "IPアドレスを動的に割り当てる", "電子メールを転送する", "通信を暗号化する"], "DNSは名前解決を行います。IPアドレスの動的割当てはDHCPの役割です。"],
+            ["TCP/IPモデルにおいて、トランスポート層のプロトコルはどれか。", ["TCP", "IP", "HTTP", "Ethernet"], "TCPとUDPはトランスポート層、IPはインターネット層、HTTPはアプリケーション層のプロトコルです。"],
+            ["サブネットマスクが255.255.255.0のネットワークで、ホストに割り当てられるアドレス数はどれか。", ["254", "256", "255", "128"], "ホスト部は8ビットで256通り。ネットワークアドレスとブロードキャストアドレスを除いた254個です。"],
+            ["関係データベースの第3正規化で排除するものはどれか。", ["推移的関数従属", "繰返し項目", "部分関数従属", "主キー"], "第1正規化で繰返し項目、第2正規化で部分関数従属、第3正規化で推移的関数従属を排除します。"],
+            ["SQLで、行をグループごとに集計するときに使う句はどれか。", ["GROUP BY", "ORDER BY", "WHERE", "DISTINCT"], "GROUP BY でグループ化し、COUNT や SUM などの集計関数と組み合わせて使います。"],
+            ["複数のプロセスが互いに相手の確保している資源の解放を待ち続け、処理が進まなくなる状態はどれか。", ["デッドロック", "スラッシング", "オーバーフロー", "フラグメンテーション"], "デッドロックは資源の相互待ちで処理が停止する状態です。スラッシングはページングが多発して性能が極端に落ちる状態です。"],
+            ["オブジェクト指向の「カプセル化」の説明として適切なものはどれか。", ["データとそれを操作する手続を一体化し、内部の詳細を隠蔽する", "既存クラスの性質を引き継いで新しいクラスを定義する", "同じメッセージに対しオブジェクトごとに異なる動作をする", "複数のクラスの共通部分を抽出する"], "カプセル化は情報隠蔽を実現します。2番目は継承、3番目はポリモーフィズム、4番目は汎化の説明です。"],
+            ["プログラムの内部構造に着目し、命令や分岐を網羅するようにテストケースを設計する手法はどれか。", ["ホワイトボックステスト", "ブラックボックステスト", "回帰テスト", "受入れテスト"], "ホワイトボックステストは内部構造に基づく手法です。ブラックボックステストは入力と出力の仕様に基づきます。"],
+            ["ディジタル署名によって確認できることはどれか。", ["送信者の真正性とメッセージが改ざんされていないこと", "メッセージの内容が第三者に読まれていないこと", "通信経路が暗号化されていること", "受信者が確実にメッセージを読んだこと"], "ディジタル署名は送信者の秘密鍵で作成し、公開鍵で検証することで、なりすましと改ざんを検知します。機密性は保証しません。"],
+            ["ウォーターフォールモデルの特徴として適切なものはどれか。", ["要件定義から順に工程を進め、原則として前工程に戻らない", "短い期間で計画・実装・テストを繰り返す", "試作品を作成して利用者の評価を得ながら進める", "システムを独立した部分に分け、順次開発・リリースする"], "ウォーターフォールは工程を上流から順に進めるモデルです。2番目はアジャイル、3番目はプロトタイピングの説明です。"]
+        ]);
+
+        const AP_QUESTIONS = buildSet('応用情報', [
+            ["稼働率0.9の装置と稼働率0.8の装置を直列に接続したシステムの稼働率はどれか。", ["0.72", "0.98", "0.85", "0.80"], "直列系の稼働率は各装置の稼働率の積です。0.9 × 0.8 = 0.72 です。"],
+            ["仮想記憶のページ置換えアルゴリズムLRUの説明として適切なものはどれか。", ["最後に参照されてから最も長い時間が経過したページを置き換える", "最も早く主記憶に読み込まれたページを置き換える", "参照回数が最も少ないページを置き換える", "ランダムに選んだページを置き換える"], "LRU（Least Recently Used）は最も長く使われていないページを追い出します。2番目はFIFO、3番目はLFUです。"],
+            ["SQLインジェクション対策として最も効果的なものはどれか。", ["プレースホルダ（バインド機構）を使ってSQL文を組み立てる", "パスワードを定期的に変更する", "通信をTLSで暗号化する", "ファイアウォールで不要なポートを閉じる"], "プレースホルダを使うと入力値がSQL文の構造として解釈されなくなるため、SQLインジェクションの根本的な対策になります。"],
+            ["クロスサイトスクリプティング（XSS）対策として適切なものはどれか。", ["Webページに出力する文字列を適切にエスケープする", "データベースへの接続にプレースホルダを使う", "セッションIDを長くする", "サーバのログを定期的に削除する"], "XSSは出力時に特殊文字をエスケープすることで、スクリプトとして実行されるのを防ぎます。"],
+            ["トランザクションのACID特性のうち「原子性（Atomicity）」の説明はどれか。", ["トランザクションの処理がすべて実行されるか、まったく実行されないかのどちらかである", "トランザクションの実行前後でデータの整合性が保たれる", "同時に実行されるトランザクションが互いに影響しない", "確定した結果は障害が起きても失われない"], "2番目は一貫性（Consistency）、3番目は独立性（Isolation）、4番目は耐久性（Durability）の説明です。"],
+            ["分散データベースで2相コミットを用いる目的はどれか。", ["すべてのサイトでコミットまたはロールバックを一致させる", "検索処理を高速化する", "データを自動的に暗号化する", "ネットワークの帯域を削減する"], "2相コミットは、準備フェーズとコミットフェーズの2段階で、全サイトの更新結果を一致させます。"],
+            ["PKIにおいて、有効期限内に失効した証明書の一覧はどれか。", ["CRL", "CSR", "CA", "OCSPレスポンダ"], "CRL（Certificate Revocation List）は失効した証明書の一覧です。CSRは証明書の発行要求、CAは認証局です。"],
+            ["ITILにおけるインシデント管理の主な目的はどれか。", ["中断したサービスを可能な限り迅速に回復させる", "インシデントの根本原因を特定して再発を防ぐ", "変更によるリスクを評価して承認する", "サービスの提供費用を算出する"], "インシデント管理は迅速な回復を目的とします。根本原因の究明は問題管理、変更の評価は変更管理の役割です。"],
+            ["SLA（サービスレベル合意書）の説明として適切なものはどれか。", ["サービスの提供者と利用者の間で、サービスの品質水準を合意した文書", "システム開発の作業手順を定めた社内規程", "ソフトウェアの使用許諾条件", "情報セキュリティ方針を定めた文書"], "SLAには可用性や応答時間などのサービスレベルと、未達時の扱いなどを定めます。"],
+            ["プロジェクトのEVMで、コスト効率を示すCPIの計算式はどれか。", ["EV ÷ AC", "EV ÷ PV", "EV − AC", "PV − AC"], "CPI = EV（出来高）÷ AC（実コスト）。1未満ならコスト超過です。スケジュール効率SPIは EV ÷ PV です。"],
+            ["ファンクションポイント法の説明として適切なものはどれか。", ["システムの機能の数と複雑さから開発規模を見積もる", "ソースコードの行数から開発規模を見積もる", "過去の類似プロジェクトとの比較で見積もる", "作業を細分化して積み上げで見積もる"], "ファンクションポイント法は入出力や内部ファイルなどの機能を数え、複雑さで重み付けして規模を見積もります。"],
+            ["命令の実行を複数の段階に分け、各段階を並行して処理することで処理効率を高める方式はどれか。", ["パイプライン処理", "マルチプログラミング", "仮想記憶", "割込み処理"], "パイプラインは命令の取出し、解読、実行などの段階をずらして重ね合わせ、全体の処理量を増やします。"],
+            ["コンテナ型仮想化の特徴として適切なものはどれか。", ["ホストOSのカーネルを共有するため、仮想マシンより軽量に起動できる", "コンテナごとに異なるOSカーネルを動かす", "ハイパーバイザ上でゲストOSを丸ごと動かす", "物理サーバを複数台に分割する装置である"], "コンテナはOSカーネルを共有してプロセスを隔離するため、ゲストOSを持つ仮想マシンより起動が速く軽量です。"],
+            ["ネットワーク機器の制御機能をソフトウェアで集中管理し、ネットワーク構成を柔軟に変更できるようにする技術はどれか。", ["SDN", "VPN", "NAT", "VLAN"], "SDN（Software-Defined Networking）は、制御（コントロールプレーン）と転送（データプレーン）を分けて集中制御します。"],
+            ["継続的インテグレーション（CI）の説明として適切なものはどれか。", ["コードの変更を頻繁に統合し、自動でビルドとテストを行う", "リリース前にまとめて結合テストを行う", "本番環境を2系統用意して切り替える", "仕様書を先に完成させてから実装する"], "CIでは小さな変更をこまめに統合し、自動テストで問題を早く見つけます。"],
+            ["情報セキュリティマネジメントシステム（ISMS）の要求事項を定めた国際規格はどれか。", ["ISO/IEC 27001", "ISO 9001", "ISO 14001", "ISO/IEC 20000-1"], "ISO/IEC 27001はISMS、ISO 9001は品質、ISO 14001は環境、ISO/IEC 20000-1はITサービスマネジメントの規格です。"],
+            ["固定費が200万円、変動費率が0.6のとき、損益分岐点売上高はどれか。", ["500万円", "333万円", "320万円", "120万円"], "損益分岐点売上高 = 固定費 ÷ (1 − 変動費率) = 200 ÷ 0.4 = 500万円です。"],
+            ["ROE（自己資本利益率）の計算式はどれか。", ["当期純利益 ÷ 自己資本", "当期純利益 ÷ 総資本", "営業利益 ÷ 売上高", "自己資本 ÷ 総資本"], "ROEは株主の出資に対してどれだけ利益を上げたかを示します。2番目はROA、4番目は自己資本比率です。"],
+            ["請負契約で、発注者が受注者の労働者に直接作業の指揮命令を行うと生じる問題はどれか。", ["偽装請負とみなされるおそれがある", "著作権が自動的に発注者へ移転する", "契約が自動的に準委任契約になる", "下請代金の支払期日が延長される"], "請負では指揮命令権は受注者にあります。発注者が直接指示すると実態が労働者派遣となり、偽装請負とみなされるおそれがあります。"],
+            ["ハッシュ表探索の平均計算量（衝突が少ない場合）はどれか。", ["O(1)", "O(log n)", "O(n)", "O(n log n)"], "ハッシュ関数で格納位置を直接求めるため、衝突が少なければ平均 O(1) で探索できます。"]
+        ]);
+
+        const TOEIC_QUESTIONS = buildSet('TOEIC', [
+            ["The quarterly report must be submitted _______ the end of the month.", ["by", "until", "since", "among"], "「〜までに（期限）」は by。until は「〜までずっと（継続）」です。"],
+            ["Ms. Tanaka was promoted because she _______ exceeded her sales targets.", ["consistently", "consistent", "consistency", "consist"], "動詞 exceeded を修飾するので副詞 consistently（一貫して）が入ります。"],
+            ["All employees are required to wear identification badges _______ in the building.", ["while", "during", "because", "although"], "while in the building（建物内にいる間）。while の後は主語と be 動詞が省略できます。during の後には名詞が続きます。"],
+            ["The new software will allow us to process orders more _______.", ["efficiently", "efficient", "efficiency", "efficiencies"], "動詞 process を修飾するので副詞 efficiently です。"],
+            ["Please _______ the attached document and send your comments by Friday.", ["review", "reviewing", "reviewed", "to review"], "Please に続く命令文なので動詞の原形 review です。"],
+            ["The marketing team has _______ received approval for the campaign budget.", ["already", "yet", "ever", "still"], "肯定文の現在完了で「すでに」は already。yet は主に否定文・疑問文で使います。"],
+            ["Ms. Lee is responsible _______ coordinating the training sessions.", ["for", "of", "to", "with"], "be responsible for 〜（〜に責任がある・〜を担当している）です。"],
+            ["The shipment was delayed _______ severe weather conditions.", ["because of", "even though", "so that", "in case"], "後ろが名詞句なので前置詞の because of。even though と so that は後ろに節が続きます。"],
+            ["The applicants _______ résumés were selected will be contacted next week.", ["whose", "who", "whom", "which"], "「その応募者の履歴書」と所有を表すので関係代名詞 whose です。"],
+            ["Sales have increased _______ 15 percent since last year.", ["by", "at", "on", "with"], "増減の幅を表す前置詞は by（〜だけ）です。"],
+            ["The company plans to _______ its operations to Southeast Asia.", ["expand", "expansion", "expansive", "expandable"], "to 不定詞の後なので動詞の原形 expand（拡大する）です。"],
+            ["If the item _______ damaged, please contact customer service immediately.", ["is", "be", "being", "to be"], "条件を表す if 節では、未来のことでも現在形を使います。"],
+            ["The seminar was so _______ that many attendees asked for additional sessions.", ["informative", "informed", "inform", "information"], "セミナー自体が「有益な」なので形容詞 informative。informed は「情報を得た（人）」の意味です。"],
+            ["Mr. Garcia has worked at the firm _______ more than ten years.", ["for", "since", "during", "while"], "期間の長さ（more than ten years）を表すので for。since の後には起点が来ます。"],
+            ["Employees may leave early _______ they have completed their assigned tasks.", ["provided that", "in spite of", "regarding", "despite"], "後ろに節が続き「〜という条件で」の意味なので provided that。in spite of と despite の後は名詞です。"],
+            ["The budget proposal must be approved by the director _______ it can be implemented.", ["before", "since", "whereas", "despite"], "「実施できるようになる前に承認が必要」なので before です。"],
+            ["Our office will be closed on Monday _______ the national holiday.", ["in observance of", "in addition", "as well", "in order"], "in observance of 〜（〜を祝して・〜に従って）。祝日による休業の案内でよく使われます。"],
+            ["Customers who buy two items will receive a third _______ free of charge.", ["one", "it", "ones", "them"], "不特定の同種のもの1つを指すので代名詞 one です。"],
+            ["_______ the manager nor her assistant was available to answer the call.", ["Neither", "Either", "Both", "Not"], "後ろに nor があるので Neither A nor B（AもBも〜ない）です。"],
+            ["The conference room is already booked for the board meeting, _______ we will use the lounge instead.", ["so", "but", "or", "because"], "「会議室が予約済みなので、ラウンジを使う」という因果関係なので so です。"]
+        ]);
+
+        const FP_QUESTIONS = buildSet('FP', [
+            ["老齢基礎年金の受給開始年齢（原則）はどれか。", ["65歳", "60歳", "62歳", "70歳"], "老齢基礎年金は原則65歳から受給します。60〜75歳の範囲で繰上げ・繰下げも可能です。"],
+            ["国民年金の第1号被保険者に該当するのはどれか。", ["20歳以上60歳未満の自営業者", "会社員などの厚生年金保険の被保険者", "会社員に扶養されている20歳以上60歳未満の配偶者", "65歳以上の年金受給者"], "第1号は自営業者や学生など、第2号は会社員・公務員、第3号は第2号に扶養される配偶者です。"],
+            ["「72の法則」によると、年利6%（複利）で運用した元本が約2倍になるのは何年後か。", ["約12年", "約6年", "約18年", "約24年"], "72 ÷ 金利(%) で倍になる年数の目安が求められます。72 ÷ 6 = 12年です。"],
+            ["預金保険制度で、利息の付く普通預金が保護される範囲はどれか。", ["1金融機関ごとに元本1,000万円までとその利息", "1金融機関ごとに元本500万円まで", "金額にかかわらず全額", "1人あたり全金融機関合計で1,000万円まで"], "一般預金等は1金融機関ごとに元本1,000万円とその利息が保護されます。利息の付かない決済用預金は全額保護されます。"],
+            ["所得税の税率の仕組みとして適切なものはどれか。", ["超過累進税率", "単一の比例税率", "定額の人頭税", "逆進税率"], "所得税は所得が一定額を超えた部分にだけ高い税率を適用する超過累進税率です。"],
+            ["定期保険の特徴として適切なものはどれか。", ["一定期間の死亡保障があり、満期保険金はない", "一生涯の死亡保障がある", "満期時に死亡保険金と同額の満期保険金がある", "死亡保障はなく医療保障のみである"], "定期保険は保障期間が決まった掛け捨て型の保険です。2番目は終身保険、3番目は養老保険の特徴です。"],
+            ["高額療養費制度の説明として適切なものはどれか。", ["1か月の医療費の自己負担額が上限を超えた分が払い戻される", "入院時の食事代が全額支給される", "差額ベッド代が払い戻される", "年間の医療費が10万円を超えると税金が還付される"], "高額療養費は月ごとの自己負担上限を超えた分を支給する制度です。食事代や差額ベッド代は対象外で、4番目は医療費控除の説明です。"],
+            ["株式投資の指標PER（株価収益率）の計算式はどれか。", ["株価 ÷ 1株当たり純利益", "株価 ÷ 1株当たり純資産", "1株当たり配当金 ÷ 株価", "当期純利益 ÷ 自己資本"], "PERは株価が利益の何倍かを示します。2番目はPBR、3番目は配当利回り、4番目はROEです。"],
+            ["2024年からのNISAで、つみたて投資枠の年間投資上限額はどれか。", ["120万円", "40万円", "240万円", "360万円"], "つみたて投資枠は年120万円、成長投資枠は年240万円で、合計の年間上限は360万円です。"],
+            ["相続税の遺産に係る基礎控除額の計算式はどれか。", ["3,000万円 + 600万円 × 法定相続人の数", "5,000万円 + 1,000万円 × 法定相続人の数", "1,000万円 + 500万円 × 法定相続人の数", "110万円 × 法定相続人の数"], "現行の基礎控除額は 3,000万円 + 600万円 × 法定相続人の数 です。"],
+            ["贈与税（暦年課税）の基礎控除額は年間いくらか。", ["110万円", "60万円", "200万円", "2,500万円"], "暦年課税の基礎控除は受贈者1人あたり年110万円です。2,500万円は相続時精算課税の特別控除額です。"],
+            ["固定資産税の納税義務者はどれか。", ["毎年1月1日時点で固定資産課税台帳に所有者として登録されている者", "毎年4月1日時点の所有者", "その年に固定資産を取得したすべての者", "固定資産の居住者"], "固定資産税は1月1日（賦課期日）時点の所有者に、市町村が課税します。"],
+            ["住宅ローンの元利均等返済の特徴として適切なものはどれか。", ["毎回の返済額（元金と利息の合計）が一定である", "毎回返済する元金の額が一定である", "返済当初の返済額が最も多い", "同じ条件なら元金均等返済より総返済額が少ない"], "元利均等返済は返済額が一定で計画が立てやすい一方、元金均等返済より総返済額は多くなります。"],
+            ["一般に、市場金利が上昇したときの既発債券の価格はどうなるか。", ["下落する", "上昇する", "変わらない", "額面の2倍になる"], "市場金利が上がると、利率の低い既発債券の魅力が下がるため、価格は下落します。"],
+            ["e-Taxでの申告など一定の要件を満たした場合の、青色申告特別控除の最高額はどれか。", ["65万円", "10万円", "55万円", "100万円"], "正規の簿記で記帳し、e-Tax申告などの要件を満たすと最高65万円、要件を満たさない場合は55万円などとなります。"],
+            ["相続人が配偶者と子の場合、配偶者の法定相続分はどれか。", ["2分の1", "3分の2", "4分の3", "3分の1"], "配偶者と子なら配偶者1/2、配偶者と直系尊属なら2/3、配偶者と兄弟姉妹なら3/4です。"],
+            ["生命保険のリビング・ニーズ特約の説明として適切なものはどれか。", ["余命6か月以内と判断された場合に死亡保険金の一部または全部を生前に受け取れる", "入院1日目から入院給付金が受け取れる", "保険料の払込みが免除される", "解約返戻金が増える"], "リビング・ニーズ特約は余命6か月以内と診断されたとき、死亡保険金を生前に受け取れる特約で、特約保険料は不要です。"],
+            ["医療費控除（通常）で、支払った医療費から差し引く金額はどれか（総所得金額等が200万円以上の場合）。", ["10万円", "5万円", "20万円", "1万2千円"], "医療費控除は（医療費 − 保険金等の補てん額 − 10万円）で計算します。総所得金額等が200万円未満なら10万円ではなくその5%です。"],
+            ["一定金額で定期的に同じ金融商品を購入し続ける投資手法はどれか。", ["ドル・コスト平均法", "バリュー投資", "インデックス運用", "レバレッジ投資"], "ドル・コスト平均法は、価格が高いときは少なく、安いときは多く買うことになり、平均購入単価を平準化できます。"],
+            ["2つの資産の相関係数がいくつのとき、分散投資によるリスク低減効果が最も大きいか。", ["−1", "0", "+1", "+0.5"], "相関係数が −1 のとき2資産は正反対に動くため、リスク低減効果が最大になります。+1 では効果がありません。"]
+        ]);
+
+        const TAKKEN_QUESTIONS = buildSet('宅建', [
+            ["宅地建物取引業の免許の有効期間はどれか。", ["5年", "3年", "7年", "10年"], "宅建業の免許の有効期間は5年です。更新は満了の90日前から30日前までに申請します。"],
+            ["重要事項の説明を行わなければならない時期はどれか。", ["契約が成立するまでの間", "契約成立後、遅滞なく", "物件の引渡し時", "代金の支払い時"], "35条の重要事項説明は契約成立前に、宅地建物取引士が取引士証を提示して行います。"],
+            ["宅建業者が自ら売主で買主が宅建業者でない場合、受け取れる手付金の上限はどれか。", ["代金の10分の2", "代金の10分の1", "代金の5%", "代金の3分の1"], "8種制限により、手付金は代金の10分の2（20%）を超えて受け取ることができません。"],
+            ["営業保証金として、主たる事務所について供託すべき額はどれか。", ["1,000万円", "500万円", "60万円", "30万円"], "営業保証金は主たる事務所1,000万円、その他の事務所1か所につき500万円です。"],
+            ["事務所等以外の場所でした申込みについて、クーリング・オフができるのは、書面で告げられた日から何日間か。", ["8日間", "7日間", "14日間", "30日間"], "クーリング・オフについて書面で告げられた日から起算して8日間は、申込みの撤回や契約の解除ができます。"],
+            ["専任媒介契約の有効期間の上限はどれか。", ["3か月", "1か月", "6か月", "1年"], "専任媒介・専属専任媒介契約の有効期間は3か月が上限で、これより長い期間を定めても3か月となります。"],
+            ["売買代金が400万円を超える場合の、宅建業者が売主・買主の一方から受け取れる報酬の上限（速算式・消費税抜き）はどれか。", ["代金の3% + 6万円", "代金の5%", "代金の4% + 2万円", "代金の1か月分"], "400万円を超える売買の媒介報酬は「代金 × 3% + 6万円」（別途消費税）が上限です。"],
+            ["事務所ごとに置かなければならない専任の宅地建物取引士の数はどれか。", ["業務に従事する者5人に1人以上", "業務に従事する者10人に1人以上", "事務所ごとに1人以上", "業務に従事する者3人に1人以上"], "事務所には、業務に従事する者5人に1人以上の割合で成年の専任取引士を置く必要があります。"],
+            ["宅建業者が契約成立後に遅滞なく交付する37条書面に記名しなければならない者はどれか。", ["宅地建物取引士", "宅建業者の代表者のみ", "買主", "国土交通大臣"], "37条書面（契約書面）には宅地建物取引士の記名が必要です。説明の義務はありません。"],
+            ["借地借家法上の普通借地権の存続期間（当初）はどれか。", ["30年", "20年", "50年", "10年"], "普通借地権の存続期間は30年です。これより長い期間を定めた場合はその期間となります。"],
+            ["期間を1年未満と定めた普通建物賃貸借の扱いはどれか。", ["期間の定めがない建物賃貸借とみなされる", "期間は1年となる", "契約は無効となる", "定めた期間のとおり有効である"], "借地借家法では、期間1年未満の普通建物賃貸借は期間の定めがないものとみなされます（定期建物賃貸借を除く）。"],
+            ["民法上、成年とされる年齢はどれか。", ["18歳", "20歳", "16歳", "22歳"], "2022年4月の民法改正で成年年齢は18歳に引き下げられました。"],
+            ["都市計画法の市街化調整区域の説明として適切なものはどれか。", ["市街化を抑制すべき区域", "すでに市街地を形成している区域", "おおむね10年以内に優先的に市街化を図る区域", "用途地域を必ず定める区域"], "市街化調整区域は市街化を抑制する区域です。2・3番目は市街化区域の説明です。"],
+            ["建築基準法の建ぺい率の説明として適切なものはどれか。", ["建築面積の敷地面積に対する割合", "延べ面積の敷地面積に対する割合", "建物の高さの道路幅員に対する割合", "緑地面積の敷地面積に対する割合"], "建ぺい率は建築面積 ÷ 敷地面積、容積率は延べ面積 ÷ 敷地面積です。"],
+            ["都市計画法で定められている用途地域の種類はいくつか。", ["13種類", "12種類", "10種類", "15種類"], "2018年に田園住居地域が加わり、用途地域は13種類になりました。"],
+            ["不動産登記簿の権利部（甲区）に記録される事項はどれか。", ["所有権に関する事項", "抵当権に関する事項", "土地の地目や地積", "建物の構造や床面積"], "甲区は所有権、乙区は抵当権など所有権以外の権利を記録します。地目・構造などは表題部です。"],
+            ["抵当権の特徴として適切なものはどれか。", ["目的物の占有を移さずに、優先して弁済を受けられる", "目的物を債権者が占有しなければ成立しない", "動産にしか設定できない", "被担保債権がなくても存続する"], "抵当権は設定者が使用を続けたまま設定でき、債権が消滅すれば抵当権も消滅します（付従性）。"],
+            ["占有の開始時に悪意だった者が、所有の意思をもって平穏・公然に他人の物を占有した場合、所有権を時効取得できる期間はどれか。", ["20年", "10年", "5年", "15年"], "占有開始時に善意無過失なら10年、それ以外は20年で時効取得します。"],
+            ["農地を農地のまま売買する場合（農地法3条）に必要な許可はどれか。", ["農業委員会の許可", "都道府県知事の許可", "市町村長への届出のみ", "国土交通大臣の許可"], "農地法3条の権利移動は、原則として農業委員会の許可が必要です。"],
+            ["不動産取得税を課税するのはどこか。", ["都道府県", "市町村", "国", "法務局"], "不動産取得税は都道府県税です。固定資産税は市町村税、登録免許税は国税です。"]
+        ]);
+
+        const KANKEN_QUESTIONS = buildSet('漢検', [
+            ["「凡例」の読みとして正しいものはどれか。", ["はんれい", "ぼんれい", "はんれつ", "ぼんれつ"], "凡例（はんれい）は、書物の初めに使い方や方針を示した部分です。"],
+            ["「漸次」の読みとして正しいものはどれか。", ["ぜんじ", "ざんじ", "せんじ", "しゅうじ"], "漸次（ぜんじ）は「しだいに、だんだん」の意味です。"],
+            ["「相殺」の読みとして正しいものはどれか。", ["そうさい", "そうさつ", "あいさい", "あいさつ"], "貸し借りなどを差し引いて帳消しにする意味では「そうさい」と読みます。"],
+            ["「出納」の読みとして正しいものはどれか。", ["すいとう", "しゅつのう", "でのう", "しゅつとう"], "出納（すいとう）は金銭や物品の出し入れのことです。"],
+            ["「遵守」の読みとして正しいものはどれか。", ["じゅんしゅ", "そんしゅ", "じゅんしゅう", "ぞんしゅ"], "遵守（じゅんしゅ）は規則や法律に従い、よく守ることです。"],
+            ["「脆弱」の読みとして正しいものはどれか。", ["ぜいじゃく", "きじゃく", "ぜつじゃく", "もろじゃく"], "脆弱（ぜいじゃく）は「もろくて弱いこと」です。"],
+            ["「暫時」の読みとして正しいものはどれか。", ["ざんじ", "ぜんじ", "しばじ", "さんじ"], "暫時（ざんじ）は「しばらくの間」の意味です。「漸次（ぜんじ）」と混同しやすいので注意。"],
+            ["「間髪を入れず」の読みとして正しいものはどれか。", ["かんはつをいれず", "かんぱつをいれず", "まがみをいれず", "あいだがみをいれず"], "「間（かん）、髪（はつ）を入れず」と区切り、すぐさまの意味です。「かんぱつ」は誤りです。"],
+            ["「弱肉強食」の意味として正しいものはどれか。", ["弱い者が強い者の犠牲になること", "弱い者どうしが助け合うこと", "強い者が弱い者を守ること", "肉を食べると強くなること"], "弱肉強食は、弱い者が強い者のえじきになる、力の強い者が栄えるという意味です。"],
+            ["「温故知新」の意味として正しいものはどれか。", ["昔のことを学び、そこから新しい知識や考えを得ること", "古いものを捨てて新しいものを取り入れること", "古い友人を大切にすること", "新しいことを学ぶと昔のことを忘れること"], "「故（ふる）きを温（たず）ねて新しきを知る」という論語由来の言葉です。"],
+            ["四字熟語として正しい表記はどれか。", ["絶体絶命", "絶対絶命", "舌体絶命", "絶体舌命"], "「絶体絶命」が正しい表記です。「絶対」と書く誤りが多いので注意しましょう。"],
+            ["四字熟語として正しい表記はどれか。", ["危機一髪", "危機一発", "危期一髪", "機危一髪"], "髪の毛一本ほどのわずかな差で危機に陥りそうな状態なので「一髪」です。"],
+            ["「拡大」の対義語はどれか。", ["縮小", "増大", "拡張", "膨張"], "拡大（広げて大きくする）の対義語は縮小です。増大・拡張・膨張は類義語です。"],
+            ["「永遠」の類義語はどれか。", ["永久", "一瞬", "刹那", "臨時"], "永遠と永久はどちらも「いつまでも続くこと」。一瞬・刹那は対義的な語です。"],
+            ["漢字「聞」の部首はどれか。", ["耳（みみ）", "門（もんがまえ）", "口（くち）", "日（ひ）"], "「聞」の部首は「耳」です。「門」と答える誤りが多い、よく出る問題です。"],
+            ["漢字「必」の総画数はどれか。", ["5画", "4画", "6画", "3画"], "「必」は5画です。筆順は「心」とは異なり、点から書き始めます。"],
+            ["「故人のイシを継ぐ」の「イシ」に当てはまる漢字はどれか。", ["遺志", "意志", "意思", "医師"], "亡くなった人が生前に持っていた志は「遺志」と書きます。"],
+            ["「彼の粘り強い努力にカンシンする」の「カンシン」に当てはまる漢字はどれか。", ["感心", "関心", "歓心", "寒心"], "立派だと心を動かされる意味では「感心」。「関心」は興味を持つこと、「寒心」はぞっとすることです。"],
+            ["「こころざす」を漢字と送り仮名で正しく書いたものはどれか。", ["志す", "志ざす", "志こざす", "心ざす"], "「志」の訓読みは「こころざ（す）」なので、送り仮名は「す」だけです。"],
+            ["「云々」の読みとして正しいものはどれか。", ["うんぬん", "でんでん", "うんうん", "いいいい"], "云々（うんぬん）は、言葉を省略するときや、とやかく言うことを表します。"]
+        ]);
 
         // --- 網羅的マスター定義 ---
         const MASTER_EXAMS_CATALOG = [
@@ -768,7 +898,7 @@
                 color: 'cyan',
                 icon: 'fa-code',
                 desc: 'ITエンジニアの登竜門。プログラミングやシステム構築の基礎',
-                questions: create20QuestionsFor('fe', '基本情報技術者試験', 'IT・情報系')
+                questions: FE_QUESTIONS
             },
             {
                 id: 'ap',
@@ -778,7 +908,7 @@
                 color: 'indigo',
                 icon: 'fa-microchip',
                 desc: 'ワンランク上のIT人材。応用的なIT知識とシステム構築能力',
-                questions: create20QuestionsFor('ap', '応用情報技術者試験', 'IT・情報系')
+                questions: AP_QUESTIONS
             },
 
             // 2. 語学・国際系
@@ -800,7 +930,7 @@
                 color: 'teal',
                 icon: 'fa-earth-americas',
                 desc: 'グローバルビジネスで必要な英語コミュニケーション力',
-                questions: create20QuestionsFor('toeic', 'TOEIC L&R', '語学・国際')
+                questions: TOEIC_QUESTIONS
             },
 
             // 3. ビジネス・会計・法律系
@@ -822,7 +952,7 @@
                 color: 'emerald',
                 icon: 'fa-coins',
                 desc: '税金・投資・保険・不動産・年金などのお金に関する総合知識',
-                questions: create20QuestionsFor('fp', 'ファイナンシャル・プランナー', 'ビジネス・会計・法律')
+                questions: FP_QUESTIONS
             },
             {
                 id: 'takken',
@@ -832,7 +962,7 @@
                 color: 'orange',
                 icon: 'fa-house-chimney-window',
                 desc: '不動産取引の専門家。契約重要事項説明などの必須国家資格',
-                questions: create20QuestionsFor('takken', '宅地建物取引士', 'ビジネス・会計・法律')
+                questions: TAKKEN_QUESTIONS
             },
 
             // 4. 教養・学術・デザイン・その他
@@ -844,7 +974,7 @@
                 color: 'rose',
                 icon: 'fa-pen-nib',
                 desc: '漢字の読み書き、四字熟語、語彙力の総合的測定',
-                questions: create20QuestionsFor('kankan', '日本漢字能力検定', '教養・学術・その他')
+                questions: KANKEN_QUESTIONS
             }
         ];
 
@@ -1141,6 +1271,41 @@
         }
 
         // --- 演習セッション開始処理 ---
+        // Fisher–Yates シャッフル（元配列は変更しない）
+        function shuffleArray(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        // 選択肢の並びをシャッフルし、正解インデックスを付け替える
+        function shuffleOptions(q) {
+            const order = shuffleArray(q.options.map((_, i) => i));
+            return {
+                ...q,
+                options: order.map(i => q.options[i]),
+                correctIndex: order.indexOf(q.correctIndex)
+            };
+        }
+
+        // 指定した検定群から重複なしの問題プールを作る
+        function buildQuestionPool(exams) {
+            const seen = new Set();
+            const pool = [];
+            exams.forEach(ex => {
+                ex.questions.forEach(q => {
+                    const key = q.title + '\u0000' + q.options.join('\u0000');
+                    if (seen.has(key)) return;
+                    seen.add(key);
+                    pool.push({ ...q, examName: ex.name, category: ex.category });
+                });
+            });
+            return pool;
+        }
+
         window.startExamById = function(examId) {
             let found = MASTER_EXAMS_CATALOG.find(e => e.id === examId);
             if (!found) {
@@ -1152,10 +1317,9 @@
                     ...q,
                     id: `${found.id}_q_${idx+1}`,
                     examName: found.name,
-                    category: found.category,
-                    year: '2026'
+                    category: found.category
                 }));
-                initExamSession(formattedQuestions, `${found.name} (全20問)`);
+                initExamSession(formattedQuestions, `${found.name} (全${formattedQuestions.length}問)`);
             } else {
                 alert("問題データを読み込めませんでした。");
             }
@@ -1163,42 +1327,25 @@
 
         window.startExam = function(type) {
             if (type === 'latest') {
-                const allQuestions = [];
-                MASTER_EXAMS_CATALOG.forEach(ex => {
-                    ex.questions.forEach(q => {
-                        allQuestions.push({
-                            ...q,
-                            examName: ex.name,
-                            category: ex.category,
-                            year: '2026'
-                        });
-                    });
-                });
-                // ランダムシャッフルして20問抽出
-                const shuffled = allQuestions.sort(() => 0.5 - Math.random()).slice(0, 20);
-                initExamSession(shuffled, '令和8年度 全検定ミックス20問総合テスト');
+                const selected = shuffleArray(buildQuestionPool(MASTER_EXAMS_CATALOG)).slice(0, 20);
+                initExamSession(selected, '全検定ミックス20問総合テスト');
             }
         };
 
-        window.startExamByYear = function() {
-            const year = document.getElementById('year-select').value;
-            const yearQuestions = [];
-            MASTER_EXAMS_CATALOG.forEach(ex => {
-                ex.questions.forEach(q => {
-                    yearQuestions.push({
-                        ...q,
-                        examName: ex.name,
-                        category: ex.category,
-                        year: year
-                    });
-                });
-            });
-            const selected20 = yearQuestions.sort(() => 0.5 - Math.random()).slice(0, 20);
-            initExamSession(selected20, `${year}年度 アーカイブ20問総合演習`);
+        window.startExamByCategory = function() {
+            const cat = document.getElementById('mix-category-select').value;
+            const exams = MASTER_EXAMS_CATALOG.filter(ex => ex.category === cat);
+            const selected = shuffleArray(buildQuestionPool(exams)).slice(0, 20);
+            if (selected.length === 0) {
+                alert("このカテゴリには問題がありません。");
+                return;
+            }
+            initExamSession(selected, `${cat} ミックス${selected.length}問演習`);
         };
 
         function initExamSession(questions, badgeTitle) {
-            window.appState.currentExamQuestions = questions;
+            // 正解位置が偏らないよう、出題のたびに選択肢をシャッフル
+            window.appState.currentExamQuestions = questions.map(shuffleOptions);
             window.appState.currentQuestionIndex = 0;
             window.appState.selectedAnswers = {};
             window.appState.elapsedSeconds = 0;
@@ -1304,7 +1451,7 @@
             container.innerHTML = `
                 <div class="flex items-center justify-between mb-3">
                     <span class="inline-block px-3 py-1 bg-brand-50 text-brand-700 text-xs font-bold rounded-lg">
-                        ${escapeHtml(q.examName)} (${q.year}年)
+                        ${escapeHtml(q.examName)}
                     </span>
                     <span class="text-xs font-bold ${isAnswered ? 'text-emerald-600' : 'text-slate-400'}">
                         ${isAnswered ? '<i class="fa-solid fa-check mr-1"></i>選択済み' : '選択肢をタップしてください'}
