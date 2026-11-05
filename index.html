@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <!-- Chart.js for Score Visualizations -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
 
     <script>
         tailwind.config = {
@@ -795,6 +795,8 @@
     <script type="module">
         // Firebase は動的 import で読み込む（CDN に届かなくてもアプリ本体は動かすため）
         const FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/11.6.1';
+        // __app_id / __firebase_config / __initial_auth_token は、外部のホスティング環境から設定を注入するための任意のグローバル変数。
+        // 通常の公開（GitHub Pages など）では定義されず、下の既定値が使われる
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'kentei-exam-app';
         // Web 用の Firebase 設定は公開前提の識別子（秘密鍵ではない）。アクセス制御は Firestore ルールで行う
         const firebaseConfig = typeof __firebase_config !== 'undefined'
@@ -885,7 +887,7 @@
             { title: "【英検 問12】The conference was postponed _______ the sudden illness of the key speaker.", options: ["due to", "in order to", "so as to", "instead of"], correctIndex: 0, explanation: "due to + 名詞（〜が理由で、〜のために）の表現です。" },
             { title: "【英検 問13】She has been working for this international bank _______ 2018.", options: ["since", "for", "from", "during"], correctIndex: 0, explanation: "現在完了形とともに「〜以来ずっと（起点）」を示すのは since です。" },
             { title: "【英検 問14】You had better _______ your homework before watching TV.", options: ["finish", "finishing", "to finish", "finished"], correctIndex: 0, explanation: "had better + 動詞の原形（〜したほうがよい）となります。" },
-            { title: "【英検 問15】This Smartphone is superior _______ the old model in many aspects.", options: ["to", "than", "over", "with"], correctIndex: 0, explanation: "be superior to 〜（〜より優れている）のラテン系比較変化です。" },
+            { title: "【英検 問15】This smartphone is superior _______ the old model in many aspects.", options: ["to", "than", "over", "with"], correctIndex: 0, explanation: "be superior to 〜（〜より優れている）。superior などラテン語由来の比較の形容詞は than ではなく to を使います。" },
             { title: "【英検 問16】He admitted _______ the mistake during the meeting yesterday.", options: ["making", "to make", "make", "made"], correctIndex: 0, explanation: "admit + 動名詞 (-ing) で「〜したことを認める」となります。" },
             { title: "【英検 問17】The traffic was very heavy; _______, we arrived at the airport on time.", options: ["nevertheless", "therefore", "otherwise", "besides"], correctIndex: 0, explanation: "nevertheless（それにもかかわらず、逆説）が文脈上正解です。" },
             { title: "【英検 問18】The instructions were so _______ that everyone got confused.", options: ["confusing", "confused", "confidence", "confidant"], correctIndex: 0, explanation: "指示（事象）が「困惑させるような」状態なので confusing が適切です。" },
@@ -904,7 +906,7 @@
             { title: "【日商簿記 問8】決算において、当期に発生した未払いの費用（電気代等）を計上する見越し処理の勘定はどれか。", options: ["未払費用", "前払費用", "未収収益", "前受収益"], correctIndex: 0, explanation: "当期にサービスを受けたが未払いの費用は「未払費用（負債）」として計上します。" },
             { title: "【日商簿記 問9】商品を売上げ、代金の一部を内金（前受け）として受け取った際の勘定科目はどれか。", options: ["前受金", "前払金", "仮受金", "預り金"], correctIndex: 0, explanation: "商品引き渡し前に受け取った内金・手付金は「前受金（負債）」となります。" },
             { title: "【日商簿記 問10】決算整理後、すべての収益・費用勘定を振り替えるための特殊な勘定はどれか。", options: ["損益", "繰越利益剰余金", "資本金", "残高"], correctIndex: 0, explanation: "決算において各収益・費用勘定の残高を集計するために「損益」勘定が用いられます。" },
-            { title: "【日商簿記 問11】自社で使用するPCを購入し代金を小切手で支払った場合の貸方勘定科目はどれか。", options: ["当座預金", "現金", "小切手", "買掛金"], correctIndex: 0, explanation: "小切振出による支払いは「当座預金」の減少（貸方）として記帳します。" },
+            { title: "【日商簿記 問11】自社で使用するPCを購入し代金を小切手で支払った場合の貸方勘定科目はどれか。", options: ["当座預金", "現金", "小切手", "買掛金"], correctIndex: 0, explanation: "小切手の振出しによる支払いは「当座預金」の減少（貸方）として記帳します。" },
             { title: "【日商簿記 問12】商品の所有権が売り手から買い手へ移転した時に売上を計上する基準を何と呼ぶか。", options: ["実現主義", "現金主義", "発生主義", "権利確定主義"], correctIndex: 0, explanation: "損益計算における収益の計上は原則として「実現主義」に基づきます。" },
             { title: "【日商簿記 問13】備品を売却し、代金は翌月払いとなった場合の勘定科目はどれか。", options: ["未収入金", "売掛金", "前払金", "仮払金"], correctIndex: 0, explanation: "商品以外の資産（備品や土地等）を売却した未回収金は「未収入金」処理します。" },
             { title: "【日商簿記 問14】従業員の給料から源泉所得税を控除して一時的に預かった場合の勘定科目はどれか。", options: ["預り金", "未払金", "預け金", "仮受金"], correctIndex: 0, explanation: "会社が一時的に従業員等から預かる税金・社会保険料は「預り金（負債）」となります。" },
