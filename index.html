@@ -164,6 +164,51 @@
                     </div>
                 </div>
 
+                <!-- 復習・苦手対策 ＆ 解答モード -->
+                <div id="review-panel" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-rotate text-brand-600"></i>
+                            復習・苦手対策
+                        </h3>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="font-bold text-slate-500">解答モード</span>
+                            <div class="inline-flex p-1 bg-slate-100 rounded-xl" role="group" aria-label="解答モード">
+                                <button type="button" data-answer-mode="batch" onclick="setAnswerMode('batch')" class="px-3 py-1.5 rounded-lg font-bold transition text-slate-600">まとめて採点</button>
+                                <button type="button" data-answer-mode="instant" onclick="setAnswerMode('instant')" class="px-3 py-1.5 rounded-lg font-bold transition text-slate-600">一問ずつ答え合わせ</button>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="answer-mode-desc" class="text-xs text-slate-500"></p>
+                    <div class="grid sm:grid-cols-3 gap-3">
+                        <button type="button" id="review-btn-due" onclick="startReviewSession('due')" class="p-4 rounded-xl border border-slate-200 hover:border-brand-300 hover:bg-brand-50/50 text-left flex items-center gap-3 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200">
+                            <i class="fa-solid fa-calendar-check text-brand-600 text-xl"></i>
+                            <span class="flex-1">
+                                <span class="block font-bold text-slate-800 text-sm">今日の復習</span>
+                                <span class="block text-[11px] text-slate-500">忘れかけた頃に再出題</span>
+                            </span>
+                            <span id="review-count-due" class="text-sm font-black text-brand-600">0</span>
+                        </button>
+                        <button type="button" id="review-btn-wrong" onclick="startReviewSession('wrong')" class="p-4 rounded-xl border border-slate-200 hover:border-rose-300 hover:bg-rose-50/50 text-left flex items-center gap-3 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200">
+                            <i class="fa-solid fa-circle-xmark text-rose-500 text-xl"></i>
+                            <span class="flex-1">
+                                <span class="block font-bold text-slate-800 text-sm">間違えた問題</span>
+                                <span class="block text-[11px] text-slate-500">直近で不正解・未解答の問題</span>
+                            </span>
+                            <span id="review-count-wrong" class="text-sm font-black text-rose-600">0</span>
+                        </button>
+                        <button type="button" id="review-btn-bookmarks" onclick="startReviewSession('bookmarks')" class="p-4 rounded-xl border border-slate-200 hover:border-amber-300 hover:bg-amber-50/50 text-left flex items-center gap-3 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200">
+                            <i class="fa-solid fa-bookmark text-amber-500 text-xl"></i>
+                            <span class="flex-1">
+                                <span class="block font-bold text-slate-800 text-sm">ブックマーク</span>
+                                <span class="block text-[11px] text-slate-500">あとで見直したい問題</span>
+                            </span>
+                            <span id="review-count-bookmarks" class="text-sm font-black text-amber-600">0</span>
+                        </button>
+                    </div>
+                    <p id="review-hint" class="text-xs text-slate-400"></p>
+                </div>
+
                 <!-- 全検定セクション (検索 ＆ カテゴリタブ付き) -->
                 <div id="exams-section" class="scroll-mt-20">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -343,6 +388,9 @@
                     </div>
 
                     <div class="flex flex-wrap justify-center gap-4">
+                        <button id="btn-retry-wrong" onclick="retryLastWrong()" class="hidden px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-sm shadow-md transition">
+                            <i class="fa-solid fa-arrow-rotate-left mr-1"></i> 間違えた<span id="retry-wrong-count">0</span>問を解き直す
+                        </button>
                         <button onclick="navigateTo('home')" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold text-sm shadow-md transition">
                             <i class="fa-solid fa-rotate-right mr-1"></i> 別の検定を解く
                         </button>
@@ -400,6 +448,25 @@
                         <div>
                             <span class="text-xs text-slate-400 font-semibold uppercase">平均正答率</span>
                             <div id="stat-avg-score" class="text-3xl font-black text-brand-600 mt-1">0 %</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 苦手分析（問題単位の正答率） -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass-chart text-brand-600"></i>
+                        苦手分析（問題ごとの正答率）
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1 mb-5">解いた問題1問ずつの正誤を集計しています。正答率の低い順に表示し、5問以上解いて60%未満のものに「苦手」を付けます。</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-500 mb-3">分野別</h4>
+                            <div id="weak-by-category" class="space-y-3"></div>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-500 mb-3">検定別</h4>
+                            <div id="weak-by-exam" class="space-y-3"></div>
                         </div>
                     </div>
                 </div>
@@ -636,7 +703,7 @@
             };
         const CLOUD_INIT_TIMEOUT_MS = 10000;
         const LOCAL_STORAGE_KEY = `quailq:${appId}:data:v1`;
-        const DATA_COLLECTIONS = ['tasks', 'history', 'customExams'];
+        const DATA_COLLECTIONS = ['tasks', 'history', 'customExams', 'bookmarks'];
 
         let fb = null;          // 読み込んだ Firebase の関数群
         let auth = null;
@@ -656,6 +723,11 @@
             tasks: [],           
             history: [],  
             customExams: [],       
+            bookmarks: [],          // { qid, createdAt }
+            answerMode: 'batch',    // 'batch'（まとめて採点） | 'instant'（一問ずつ答え合わせ）
+            sessionMode: 'batch',   // 実施中の演習のモード
+            revealed: {},           // 一問ずつモードで答え合わせ済みの問題 index
+            lastWrongQuestions: [], // 直前の演習で間違えた問題
             activeCategory: 'ALL',
             searchQuery: '',
             startTime: null,
@@ -984,6 +1056,12 @@
             }
         ];
 
+        // 学習記録・復習用に、各問題へ安定した ID（「検定ID-番号」）を付ける
+        // ※ 並び順が変わると ID も変わるため、問題を追加するときは各セットの末尾に追加すること
+        MASTER_EXAMS_CATALOG.forEach(ex => {
+            ex.questions = ex.questions.map((q, i) => ({ ...q, qid: `${ex.id}-${i + 1}`, examId: ex.id }));
+        });
+
         // --- データ保存レイヤー（Firestore / localStorage 切替） ---
         function sortHistory(list) {
             return [...list].sort((a, b) => (Date.parse(b.createdAt) || 0) - (Date.parse(a.createdAt) || 0));
@@ -1024,14 +1102,16 @@
 
         function renderAllData() {
             renderTasks();
-            renderHistory();
             renderExamsGrid();
+            renderHistory();
+            refreshBookmarkButtons();
         }
 
         const DATA_RENDERERS = {
             tasks: () => renderTasks(),
             history: () => renderHistory(),
-            customExams: () => renderExamsGrid()
+            customExams: () => { renderExamsGrid(); renderLearningInsights(); },
+            bookmarks: () => { renderLearningInsights(); refreshBookmarkButtons(); }
         };
 
         function updateSyncBadge() {
@@ -1186,13 +1266,16 @@
             snapshotUnsubscribers = [
                 listen('tasks', sortByCreatedAsc),
                 listen('history', sortHistory),
-                listen('customExams', sortByCreatedAsc)
+                listen('customExams', sortByCreatedAsc),
+                listen('bookmarks', sortHistory)
             ];
         }
 
         window.addEventListener('load', () => {
             initAuthAndData();
             renderExamsGrid();
+            renderAnswerModeToggle();
+            renderLearningInsights();
 
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -1442,7 +1525,7 @@
                     const key = q.title + '\u0000' + q.options.join('\u0000');
                     if (seen.has(key)) return;
                     seen.add(key);
-                    pool.push({ ...q, examName: ex.name, category: ex.category });
+                    pool.push({ ...q, examId: ex.id, examName: ex.name, category: ex.category });
                 });
             });
             return pool;
@@ -1457,9 +1540,10 @@
             if (found && found.questions.length > 0) {
                 const formattedQuestions = found.questions.slice(0, 20).map((q, idx) => ({
                     ...q,
-                    id: `${found.id}_q_${idx+1}`,
+                    qid: q.qid || `${found.id}-${idx + 1}`,
+                    examId: found.id,
                     examName: found.name,
-                    category: found.category
+                    category: found.category || '教養・学術・その他'
                 }));
                 initExamSession(formattedQuestions, `${found.name} (全${formattedQuestions.length}問)`);
             } else {
@@ -1485,11 +1569,244 @@
             initExamSession(selected, `${cat} ミックス${selected.length}問演習`);
         };
 
+        // ===== 学習記録・復習機能 =====
+        // 間隔反復：連続正解数に応じて次の出題までの日数を伸ばす（不正解なら 0 日＝すぐ復習）
+        const REVIEW_INTERVAL_DAYS = [0, 1, 3, 7, 14, 30, 60];
+        const DAY_MS = 24 * 60 * 60 * 1000;
+        const WEAK_THRESHOLD = 60;
+        const WEAK_MIN_ATTEMPTS = 5;
+
+        function getAllExamsForIndex() {
+            return [
+                ...MASTER_EXAMS_CATALOG,
+                ...window.appState.customExams.map(ce => ({
+                    id: ce.id,
+                    name: ce.name,
+                    category: ce.category || '教養・学術・その他',
+                    questions: Array.isArray(ce.questions) ? ce.questions : []
+                }))
+            ];
+        }
+
+        // qid → 問題データ（検定名・分野つき）
+        function buildQuestionIndex() {
+            const index = new Map();
+            getAllExamsForIndex().forEach(ex => {
+                ex.questions.forEach((q, i) => {
+                    const qid = q.qid || `${ex.id}-${i + 1}`;
+                    index.set(qid, { ...q, qid, examId: ex.id, examName: ex.name, category: ex.category });
+                });
+            });
+            return index;
+        }
+
+        // 履歴に保存した問題ごとの正誤から、問題単位の成績を作る
+        function computeQuestionStats() {
+            const stats = new Map();
+            const chronological = [...window.appState.history]
+                .sort((a, b) => (Date.parse(a.createdAt) || 0) - (Date.parse(b.createdAt) || 0));
+            chronological.forEach(rec => {
+                if (!Array.isArray(rec.answers)) return; // 問題ごとの記録がない古い履歴は対象外
+                const at = Date.parse(rec.createdAt) || 0;
+                rec.answers.forEach(a => {
+                    if (!a || !a.qid) return;
+                    const s = stats.get(a.qid) || { qid: a.qid, attempts: 0, correct: 0, streak: 0, lastCorrect: false, lastAt: 0 };
+                    s.attempts++;
+                    if (a.correct) { s.correct++; s.streak++; } else { s.streak = 0; }
+                    s.lastCorrect = !!a.correct;
+                    s.lastAt = at;
+                    s.examId = a.examId || s.examId;
+                    s.examName = a.examName || s.examName;
+                    s.category = a.category || s.category;
+                    stats.set(a.qid, s);
+                });
+            });
+            return stats;
+        }
+
+        function nextReviewAt(s) {
+            if (!s.lastCorrect) return s.lastAt;
+            const days = REVIEW_INTERVAL_DAYS[Math.min(s.streak, REVIEW_INTERVAL_DAYS.length - 1)];
+            return s.lastAt + days * DAY_MS;
+        }
+
+        function getReviewQids(kind, stats, index) {
+            const now = Date.now();
+            let qids = [];
+            if (kind === 'wrong') {
+                qids = [...stats.values()]
+                    .filter(s => !s.lastCorrect)
+                    .sort((a, b) => b.lastAt - a.lastAt)
+                    .map(s => s.qid);
+            } else if (kind === 'due') {
+                qids = [...stats.values()]
+                    .filter(s => nextReviewAt(s) <= now)
+                    .sort((a, b) => (a.lastCorrect - b.lastCorrect) || (nextReviewAt(a) - nextReviewAt(b)))
+                    .map(s => s.qid);
+            } else if (kind === 'bookmarks') {
+                qids = sortHistory(window.appState.bookmarks).map(b => b.qid);
+            }
+            return [...new Set(qids)].filter(qid => index.has(qid));
+        }
+
+        const REVIEW_LABELS = { due: '今日の復習', wrong: '間違えた問題の復習', bookmarks: 'ブックマークした問題' };
+
+        window.startReviewSession = function(kind) {
+            const index = buildQuestionIndex();
+            const qids = getReviewQids(kind, computeQuestionStats(), index);
+            if (qids.length === 0) {
+                showModal(REVIEW_LABELS[kind] || '復習', '対象の問題はありません。');
+                return;
+            }
+            // 優先度の高い順に最大20問を選び、出題順はシャッフル
+            const selected = shuffleArray(qids.slice(0, 20).map(qid => index.get(qid)));
+            initExamSession(selected, `${REVIEW_LABELS[kind]} (${selected.length}問)`);
+        };
+
+        window.retryLastWrong = function() {
+            const qs = window.appState.lastWrongQuestions || [];
+            if (qs.length === 0) return;
+            initExamSession(qs, `間違えた問題の解き直し (${qs.length}問)`);
+        };
+
+        function weaknessRowsHtml(groups) {
+            if (groups.length === 0) {
+                return '<p class="text-xs text-slate-400">まだデータがありません。演習すると、ここに分野・検定ごとの正答率が表示されます。</p>';
+            }
+            return groups.map(g => {
+                const rate = Math.round((g.correct / g.attempts) * 100);
+                const isWeak = rate < WEAK_THRESHOLD && g.attempts >= WEAK_MIN_ATTEMPTS;
+                const barColor = rate < WEAK_THRESHOLD ? 'bg-rose-500' : rate < 80 ? 'bg-amber-400' : 'bg-emerald-500';
+                return `
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-1 gap-2">
+                            <span class="font-semibold text-slate-700 truncate">
+                                ${escapeHtml(g.name)}
+                                ${isWeak ? '<span class="ml-1 px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 text-[10px] font-bold">苦手</span>' : ''}
+                            </span>
+                            <span class="text-slate-500 shrink-0"><span class="font-bold text-slate-800">${rate}%</span> (${g.correct}/${g.attempts})</span>
+                        </div>
+                        <div class="h-2 rounded-full bg-slate-100 overflow-hidden" role="img" aria-label="${escapeHtml(g.name)} 正答率${rate}%">
+                            <div class="h-2 rounded-full ${barColor}" style="width: ${rate}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function groupStats(stats, keyFn) {
+            const groups = new Map();
+            stats.forEach(s => {
+                const name = keyFn(s) || 'その他';
+                const g = groups.get(name) || { name, attempts: 0, correct: 0 };
+                g.attempts += s.attempts;
+                g.correct += s.correct;
+                groups.set(name, g);
+            });
+            return [...groups.values()].sort((a, b) => (a.correct / a.attempts) - (b.correct / b.attempts) || b.attempts - a.attempts);
+        }
+
+        // 復習パネルの件数と苦手分析を更新する
+        function renderLearningInsights() {
+            const stats = computeQuestionStats();
+            const index = buildQuestionIndex();
+
+            ['due', 'wrong', 'bookmarks'].forEach(kind => {
+                const count = getReviewQids(kind, stats, index).length;
+                const countEl = document.getElementById(`review-count-${kind}`);
+                const btn = document.getElementById(`review-btn-${kind}`);
+                if (countEl) countEl.textContent = count;
+                if (btn) btn.disabled = count === 0;
+            });
+            const hint = document.getElementById('review-hint');
+            if (hint) {
+                hint.textContent = stats.size === 0
+                    ? '演習すると問題ごとの正誤が記録され、間違えた問題の解き直しや復習に使えるようになります。'
+                    : `これまでに ${stats.size} 問の正誤を記録しています。正解が続いた問題ほど、次の復習までの間隔が長くなります（1日→3日→7日→14日→30日→60日）。`;
+            }
+
+            const byCat = document.getElementById('weak-by-category');
+            const byExam = document.getElementById('weak-by-exam');
+            if (byCat) byCat.innerHTML = weaknessRowsHtml(groupStats(stats, s => s.category));
+            if (byExam) byExam.innerHTML = weaknessRowsHtml(groupStats(stats, s => s.examName));
+        }
+
+        // --- ブックマーク ---
+        function isBookmarked(qid) {
+            return window.appState.bookmarks.some(b => b.qid === qid);
+        }
+
+        function bookmarkInnerHtml(on) {
+            return on
+                ? '<i class="fa-solid fa-bookmark mr-1"></i>ブックマーク済み'
+                : '<i class="fa-regular fa-bookmark mr-1"></i>ブックマーク';
+        }
+
+        function bookmarkButtonHtml(qid) {
+            if (!qid) return '';
+            const on = isBookmarked(qid);
+            return `<button type="button" data-bookmark-qid="${escapeHtml(qid)}" onclick="toggleBookmark(this.dataset.bookmarkQid)" aria-pressed="${on}"
+                class="text-xs font-bold px-2.5 py-1 rounded-lg hover:bg-amber-50 transition ${on ? 'text-amber-600' : 'text-slate-400'}">${bookmarkInnerHtml(on)}</button>`;
+        }
+
+        function refreshBookmarkButtons() {
+            document.querySelectorAll('[data-bookmark-qid]').forEach(btn => {
+                const on = isBookmarked(btn.dataset.bookmarkQid);
+                btn.innerHTML = bookmarkInnerHtml(on);
+                btn.classList.toggle('text-amber-600', on);
+                btn.classList.toggle('text-slate-400', !on);
+                btn.setAttribute('aria-pressed', String(on));
+            });
+        }
+
+        window.toggleBookmark = function(qid) {
+            if (!qid) return;
+            const existing = window.appState.bookmarks.filter(b => b.qid === qid);
+            if (existing.length > 0) {
+                removeRecords('bookmarks', existing.map(b => b.id));
+            } else {
+                addRecord('bookmarks', { qid, createdAt: new Date().toISOString() });
+            }
+        };
+
+        // --- 解答モード（まとめて採点 / 一問ずつ答え合わせ） ---
+        const ANSWER_MODE_KEY = 'quailq:answer-mode';
+        const ANSWER_MODE_DESC = {
+            batch: 'まとめて採点：全問を解き終えてから、まとめて正誤と解説を確認します（本番形式）。',
+            instant: '一問ずつ答え合わせ：解答するたびにその場で正誤と解説を表示します（学習向け）。'
+        };
+
+        try {
+            if (localStorage.getItem(ANSWER_MODE_KEY) === 'instant') window.appState.answerMode = 'instant';
+        } catch (_) { /* 保存領域が使えない場合は既定値のまま */ }
+
+        function renderAnswerModeToggle() {
+            const mode = window.appState.answerMode;
+            document.querySelectorAll('[data-answer-mode]').forEach(btn => {
+                const active = btn.dataset.answerMode === mode;
+                btn.classList.toggle('bg-white', active);
+                btn.classList.toggle('shadow', active);
+                btn.classList.toggle('text-brand-700', active);
+                btn.classList.toggle('text-slate-600', !active);
+                btn.setAttribute('aria-pressed', String(active));
+            });
+            const desc = document.getElementById('answer-mode-desc');
+            if (desc) desc.textContent = ANSWER_MODE_DESC[mode];
+        }
+
+        window.setAnswerMode = function(mode) {
+            window.appState.answerMode = mode === 'instant' ? 'instant' : 'batch';
+            try { localStorage.setItem(ANSWER_MODE_KEY, window.appState.answerMode); } catch (_) {}
+            renderAnswerModeToggle();
+        };
+
         function initExamSession(questions, badgeTitle) {
             // 正解位置が偏らないよう、出題のたびに選択肢をシャッフル
             window.appState.currentExamQuestions = questions.map(shuffleOptions);
             window.appState.currentQuestionIndex = 0;
             window.appState.selectedAnswers = {};
+            window.appState.revealed = {};
+            window.appState.sessionMode = window.appState.answerMode;
             window.appState.elapsedSeconds = 0;
 
             document.getElementById('exam-badge').textContent = badgeTitle;
@@ -1522,8 +1839,13 @@
                 const isCurrent = idx === curIdx;
                 let bgClass = "bg-slate-100 text-slate-500 border-slate-200";
 
+                const revealed = window.appState.sessionMode === 'instant' && window.appState.revealed[idx];
                 if (isCurrent) {
                     bgClass = "bg-brand-600 text-white border-brand-700 ring-2 ring-brand-300 font-bold";
+                } else if (revealed) {
+                    bgClass = userAns === q.correctIndex
+                        ? "bg-emerald-100 text-emerald-700 border-emerald-300 font-bold"
+                        : "bg-rose-100 text-rose-700 border-rose-300 font-bold";
                 } else if (userAns !== undefined) {
                     bgClass = "bg-brand-100 text-brand-700 border-brand-300 font-bold";
                 }
@@ -1567,37 +1889,95 @@
 
             const container = document.getElementById('single-question-card');
             const labels = ['ア', 'イ', 'ウ', 'エ'];
+            const instant = window.appState.sessionMode === 'instant';
+            const revealed = instant && !!window.appState.revealed[curIdx];
+            const isCorrect = isAnswered && userAns === q.correctIndex;
 
             let optionsHtml = q.options.map((opt, optIdx) => {
                 const isSelected = optIdx === userAns;
+                const isRightOption = optIdx === q.correctIndex;
                 let btnStyle = "border-slate-200 hover:border-slate-300 bg-white text-slate-800";
                 let badgeStyle = "border-slate-300 text-slate-500 bg-slate-50";
+                let tag = '';
 
-                if (isSelected) {
+                if (revealed) {
+                    // 答え合わせ後：正解を緑、選んだ誤答を赤で示し、選び直しはできない
+                    if (isRightOption) {
+                        btnStyle = "border-emerald-500 bg-emerald-50 font-bold text-emerald-900";
+                        badgeStyle = "border-emerald-600 bg-emerald-600 text-white";
+                        tag = '<span class="ml-auto text-xs font-bold text-emerald-700 shrink-0"><i class="fa-solid fa-circle-check mr-1"></i>正解</span>';
+                    } else if (isSelected) {
+                        btnStyle = "border-rose-400 bg-rose-50 font-bold text-rose-900";
+                        badgeStyle = "border-rose-600 bg-rose-600 text-white";
+                        tag = '<span class="ml-auto text-xs font-bold text-rose-600 shrink-0"><i class="fa-solid fa-circle-xmark mr-1"></i>あなたの解答</span>';
+                    } else {
+                        btnStyle = "border-slate-200 bg-white text-slate-500 opacity-70";
+                    }
+                } else if (isSelected) {
                     btnStyle = "border-brand-600 bg-brand-50/90 font-bold text-brand-900 ring-2 ring-brand-200";
                     badgeStyle = "border-brand-600 bg-brand-600 text-white";
+                    tag = '<span class="ml-auto text-xs font-bold text-brand-600 shrink-0"><i class="fa-solid fa-check-circle mr-1"></i>選択中</span>';
                 }
 
                 return `
-                    <button onclick="handleOptionSelect(${curIdx}, ${optIdx})"
-                        class="w-full text-left p-4 rounded-2xl border-2 transition flex items-center space-x-3 ${btnStyle}">
+                    <button onclick="handleOptionSelect(${curIdx}, ${optIdx})" ${revealed ? 'disabled' : ''}
+                        class="w-full text-left p-4 rounded-2xl border-2 transition flex items-center space-x-3 disabled:cursor-default ${btnStyle}">
                         <span class="w-7 h-7 rounded-full border flex items-center justify-center shrink-0 font-bold text-xs ${badgeStyle}">
                             ${labels[optIdx]}
                         </span>
                         <span class="text-xs sm:text-sm leading-snug flex-1">${escapeHtml(opt)}</span>
-                        ${isSelected ? '<span class="ml-auto text-xs font-bold text-brand-600"><i class="fa-solid fa-check-circle mr-1"></i>選択中</span>' : ''}
+                        ${tag}
                     </button>
                 `;
             }).join('');
 
+            let statusHtml;
+            if (revealed) {
+                statusHtml = isCorrect
+                    ? '<span class="text-xs font-bold text-emerald-600"><i class="fa-solid fa-circle-check mr-1"></i>正解</span>'
+                    : '<span class="text-xs font-bold text-rose-600"><i class="fa-solid fa-circle-xmark mr-1"></i>不正解</span>';
+            } else {
+                statusHtml = `<span class="text-xs font-bold ${isAnswered ? 'text-emerald-600' : 'text-slate-400'}">
+                        ${isAnswered ? '<i class="fa-solid fa-check mr-1"></i>選択済み' : '選択肢をタップしてください'}
+                    </span>`;
+            }
+
+            const feedbackHtml = revealed ? `
+                <div class="mt-6 p-4 rounded-2xl border ${isCorrect ? 'bg-emerald-50 border-emerald-300' : 'bg-rose-50 border-rose-300'}" role="status" aria-live="polite">
+                    <div class="font-black text-base ${isCorrect ? 'text-emerald-700' : 'text-rose-700'} mb-1">
+                        ${isCorrect ? '○ 正解！' : '× 不正解'}
+                    </div>
+                    ${isCorrect ? '' : `<div class="text-xs text-slate-700 mb-2">正しい解答：<span class="font-bold text-emerald-700">${escapeHtml(labels[q.correctIndex] + '. ' + q.options[q.correctIndex])}</span></div>`}
+                    <div class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                        <span class="font-bold text-brand-600">【解説】</span>${escapeHtml(q.explanation)}
+                    </div>
+                </div>
+            ` : '';
+
+            let footerText, actionLabel, actionIcon;
+            if (!instant) {
+                footerText = isAnswered ? '選択肢を選び直すか、「解答を確定」ボタンを押してください' : '選択肢を選び「解答を確定」を押してください';
+                actionLabel = isLast ? '解答を確定して採点結果へ' : '解答を確定して次の問題へ';
+                actionIcon = isLast ? 'fa-award' : 'fa-arrow-right';
+            } else if (!revealed) {
+                footerText = '選択肢を選び「解答して答え合わせ」を押してください';
+                actionLabel = '解答して答え合わせ';
+                actionIcon = 'fa-check';
+            } else {
+                footerText = '解説を確認したら次へ進みましょう';
+                actionLabel = isLast ? '採点結果へ' : '次の問題へ';
+                actionIcon = isLast ? 'fa-award' : 'fa-arrow-right';
+            }
+
             container.innerHTML = `
-                <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                     <span class="inline-block px-3 py-1 bg-brand-50 text-brand-700 text-xs font-bold rounded-lg">
                         ${escapeHtml(q.examName)}
                     </span>
-                    <span class="text-xs font-bold ${isAnswered ? 'text-emerald-600' : 'text-slate-400'}">
-                        ${isAnswered ? '<i class="fa-solid fa-check mr-1"></i>選択済み' : '選択肢をタップしてください'}
-                    </span>
+                    <div class="flex items-center gap-2">
+                        ${bookmarkButtonHtml(q.qid)}
+                        ${statusHtml}
+                    </div>
                 </div>
 
                 <h2 class="text-base sm:text-lg font-bold text-slate-800 leading-relaxed mb-6">
@@ -1608,20 +1988,22 @@
                     ${optionsHtml}
                 </div>
 
+                ${feedbackHtml}
+
                 <div class="mt-8 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <span class="text-xs text-slate-500 font-medium">
-                        ${isAnswered ? '選択肢を選び直すか、「解答を確定」ボタンを押してください' : '選択肢を選び「解答を確定」を押してください'}
-                    </span>
+                    <span class="text-xs text-slate-500 font-medium">${footerText}</span>
                     <button onclick="confirmAnswerAndNext()" ${!isAnswered ? 'disabled' : ''}
                         class="w-full sm:w-auto px-6 py-3 bg-brand-600 hover:bg-brand-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold rounded-xl text-sm shadow-md transition flex items-center justify-center space-x-2">
-                        <span>${isLast ? '解答を確定して採点結果へ' : '解答を確定して次の問題へ'}</span>
-                        <i class="fa-solid ${isLast ? 'fa-award' : 'fa-arrow-right'}"></i>
+                        <span>${actionLabel}</span>
+                        <i class="fa-solid ${actionIcon}"></i>
                     </button>
                 </div>
             `;
         }
 
         window.handleOptionSelect = function(qIndex, optIdx) {
+            // 一問ずつモードで答え合わせ済みの問題は選び直せない
+            if (window.appState.sessionMode === 'instant' && window.appState.revealed[qIndex]) return;
             window.appState.selectedAnswers[qIndex] = optIdx;
             renderCurrentQuestion();
         };
@@ -1632,6 +2014,13 @@
 
             if (window.appState.selectedAnswers[curIdx] === undefined) {
                 alert("選択肢を1つ選んでください。");
+                return;
+            }
+
+            // 一問ずつモード：1回目の押下では答え合わせだけ行い、次の押下で先へ進む
+            if (window.appState.sessionMode === 'instant' && !window.appState.revealed[curIdx]) {
+                window.appState.revealed[curIdx] = true;
+                renderCurrentQuestion();
                 return;
             }
 
@@ -1698,8 +2087,26 @@
                 score: `${correctCount} / ${total}`,
                 accuracy: accuracyVal,
                 timeSpent: timeStr,
+                mode: window.appState.sessionMode,
+                // 問題ごとの正誤（復習・苦手分析に使う）。Firestore は undefined を保存できないため null にそろえる
+                answers: questions.filter(q => q.qid).map(q => {
+                    const idx = questions.indexOf(q);
+                    return {
+                        qid: q.qid,
+                        examId: q.examId || null,
+                        examName: q.examName || '',
+                        category: q.category || '',
+                        answered: answers[idx] !== undefined,
+                        correct: answers[idx] === q.correctIndex
+                    };
+                }),
                 createdAt: new Date().toISOString()
             };
+
+            window.appState.lastWrongQuestions = questions.filter((q, idx) => answers[idx] !== q.correctIndex);
+            const retryBtn = document.getElementById('btn-retry-wrong');
+            document.getElementById('retry-wrong-count').textContent = window.appState.lastWrongQuestions.length;
+            retryBtn.classList.toggle('hidden', window.appState.lastWrongQuestions.length === 0);
 
             // 保存（ローカル時も renderHistory まで行われ、履歴・統計がすぐ更新される）
             addRecord('history', resultRecord);
@@ -1726,7 +2133,10 @@
                                     ${isCorrect ? '正解' : '不正解'}
                                 </span>
                             </div>
-                            <span class="text-xs font-bold text-slate-400">問題 ${idx + 1} / ${total}</span>
+                            <span class="flex items-center gap-2">
+                                ${bookmarkButtonHtml(q.qid)}
+                                <span class="text-xs font-bold text-slate-400">問題 ${idx + 1} / ${total}</span>
+                            </span>
                         </div>
 
                         <h4 class="font-bold text-slate-800 text-sm sm:text-base mb-3 leading-snug">${escapeHtml(q.title)}</h4>
@@ -1762,6 +2172,7 @@
             const tbody = document.getElementById('history-table-body');
             // 保存先にかかわらず新しい順に並べる（グラフ・表ともこの順序を前提にする）
             const history = window.appState.history = sortHistory(window.appState.history);
+            renderLearningInsights();
 
             document.getElementById('stat-total-count').textContent = `${history.length} 回`;
             
