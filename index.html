@@ -36,7 +36,60 @@
             }
         }
     </script>
+    <script>
+        // 画面描画前にテーマを適用してちらつきを防ぐ（'system' | 'light' | 'dark'）
+        (function () {
+            var pref = 'system';
+            try { pref = localStorage.getItem('quailq:theme') || 'system'; } catch (e) {}
+            var dark = pref === 'dark' || (pref === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (dark) document.documentElement.classList.add('dark');
+        })();
+    </script>
     <style>
+        /* 現在の画面のナビゲーションを強調 */
+        [data-nav][aria-current="page"] { color: #2563eb !important; }
+        header [data-nav][aria-current="page"] { background-color: #eff6ff; }
+        html.dark [data-nav][aria-current="page"] { color: #60a5fa !important; }
+        html.dark header [data-nav][aria-current="page"] { background-color: rgba(37, 99, 235, 0.18); }
+
+        /* ===== ダークモード（Tailwind のクラスを上書き。html.dark で詳細度を上げる） ===== */
+        html.dark { color-scheme: dark; }
+        html.dark, html.dark body, html.dark .bg-slate-50 { background-color: #0b1120; }
+        html.dark .bg-white, html.dark .hover\:bg-white:hover { background-color: #111827; }
+        html.dark .bg-white\/95 { background-color: rgba(17, 24, 39, 0.95); }
+        html.dark .bg-slate-50\/60, html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-50\/80:hover { background-color: #0f172a; }
+        html.dark .bg-slate-100, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover,
+        html.dark .disabled\:bg-slate-200:disabled { background-color: #1e293b; }
+        html.dark .disabled\:bg-slate-300:disabled { background-color: #334155; }
+        html.dark .text-slate-800 { color: #e2e8f0; }
+        html.dark .text-slate-700 { color: #cbd5e1; }
+        html.dark .text-slate-600, html.dark .text-slate-500 { color: #94a3b8; }
+        html.dark .text-slate-300 { color: #475569; }
+        html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-200\/80,
+        html.dark .hover\:border-slate-200:hover { border-color: #1f2937; }
+        html.dark .border-slate-300, html.dark .hover\:border-slate-300:hover { border-color: #334155; }
+        html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1f2937; }
+        html.dark .bg-brand-50, html.dark .bg-brand-50\/90, html.dark .hover\:bg-brand-50\/50:hover { background-color: rgba(37, 99, 235, 0.15); }
+        html.dark .bg-brand-100, html.dark .group:hover .group-hover\:bg-brand-100 { background-color: rgba(37, 99, 235, 0.28); }
+        html.dark .text-brand-600, html.dark .hover\:text-brand-600:hover, html.dark .group:hover .group-hover\:text-brand-600 { color: #60a5fa; }
+        html.dark .text-brand-700, html.dark .text-brand-900 { color: #93c5fd; }
+        html.dark .border-brand-300, html.dark .hover\:border-brand-300:hover { border-color: rgba(96, 165, 250, 0.5); }
+        html.dark .bg-emerald-50, html.dark .bg-emerald-50\/50 { background-color: rgba(16, 185, 129, 0.12); }
+        html.dark .bg-emerald-100 { background-color: rgba(16, 185, 129, 0.22); }
+        html.dark .text-emerald-700, html.dark .text-emerald-800, html.dark .text-emerald-900 { color: #6ee7b7; }
+        html.dark .border-emerald-200, html.dark .border-emerald-300 { border-color: rgba(16, 185, 129, 0.4); }
+        html.dark .bg-rose-50, html.dark .bg-rose-50\/50, html.dark .hover\:bg-rose-50\/50:hover { background-color: rgba(244, 63, 94, 0.12); }
+        html.dark .bg-rose-100 { background-color: rgba(244, 63, 94, 0.22); }
+        html.dark .text-rose-700, html.dark .text-rose-800, html.dark .text-rose-900 { color: #fda4af; }
+        html.dark .border-rose-200, html.dark .border-rose-300, html.dark .hover\:border-rose-300:hover { border-color: rgba(244, 63, 94, 0.4); }
+        html.dark .bg-amber-50, html.dark .bg-amber-50\/40, html.dark .hover\:bg-amber-50:hover,
+        html.dark .hover\:bg-amber-50\/50:hover, html.dark .hover\:bg-amber-100:hover { background-color: rgba(245, 158, 11, 0.12); }
+        html.dark .bg-amber-100 { background-color: rgba(245, 158, 11, 0.22); }
+        html.dark .text-amber-700, html.dark .text-amber-800, html.dark .text-amber-900 { color: #fcd34d; }
+        html.dark .border-amber-200, html.dark .border-amber-300, html.dark .hover\:border-amber-300:hover { border-color: rgba(245, 158, 11, 0.4); }
+        html.dark input, html.dark textarea, html.dark select { background-color: #0f172a; color: #e2e8f0; }
+        html.dark kbd { background-color: #1e293b; border-color: #334155; }
+
         .fade-in { animation: fadeIn 0.3s ease-in-out forwards; }
         .fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -53,21 +106,15 @@
                 <div class="w-24 h-24 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 flex items-center justify-center shadow-2xl mx-auto">
                     <i class="fa-solid font-bold fa-graduation-cap text-5xl text-blue-300 animate-pulse"></i>
                 </div>
-                <div class="absolute -bottom-2 -right-2 bg-amber-400 text-brand-900 text-xs font-black px-2.5 py-1 rounded-full shadow-lg">
-                    ALL EXAMS
-                </div>
             </div>
             <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">QualiQ</h1>
             <p class="text-blue-200 text-sm sm:text-base max-w-xs mx-auto mb-8 font-light">
-                あらゆる検定・資格に対応！<br>各検定20問のオリジナル練習問題で学習
+                主要な検定のオリジナル練習問題と<br>自作検定で学習できます
             </p>
             <div class="flex items-center justify-center space-x-2 text-sm text-blue-300">
                 <i class="fa-solid fa-spinner fa-spin"></i>
-                <span>全検定データベース読み込み中...</span>
+                <span>読み込み中...</span>
             </div>
-        </div>
-        <div class="absolute bottom-6 text-xs text-blue-300/60">
-            Powered by Cloud Knowledge Base & Firebase
         </div>
     </div>
 
@@ -77,42 +124,45 @@
         <!-- ヘッダーナビゲーション -->
         <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+                <a href="#home" class="flex items-center space-x-3 cursor-pointer" onclick="event.preventDefault(); navigateTo('home')" aria-label="QualiQ ホーム">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
                         <i class="fa-solid fa-graduation-cap text-lg"></i>
                     </div>
                     <div>
                         <span class="text-lg font-bold bg-gradient-to-r from-brand-700 to-indigo-700 bg-clip-text text-transparent">QualiQ</span>
-                        <span class="block text-[10px] text-slate-400 font-medium -mt-1">ALL EXAMS PLATFORM</span>
+                        <span class="block text-[10px] text-slate-400 font-medium -mt-1">資格・検定の学習</span>
                     </div>
-                </div>
+                </a>
 
                 <!-- デスクトップ ナビゲーション -->
-                <nav class="hidden md:flex items-center space-x-1">
-                    <button onclick="navigateTo('home')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition flex items-center space-x-2">
+                <nav class="hidden md:flex items-center space-x-1" aria-label="メインメニュー">
+                    <button type="button" data-nav="home" onclick="navigateTo('home')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition flex items-center space-x-2">
                         <i class="fa-solid fa-house"></i>
                         <span>ホーム</span>
                     </button>
-                    <button onclick="if (navigateTo('home')) scrollToExams();" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition flex items-center space-x-2">
+                    <button type="button" onclick="navigateTo('home').then(ok => ok && scrollToExams())" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition flex items-center space-x-2">
                         <i class="fa-solid fa-layer-group"></i>
                         <span>全検定一覧</span>
                     </button>
-                    <button onclick="openCustomExamModal()" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-amber-600 hover:bg-amber-50 transition flex items-center space-x-2">
+                    <button type="button" onclick="openCustomExamModal()" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-amber-600 hover:bg-amber-50 transition flex items-center space-x-2">
                         <i class="fa-solid fa-square-plus"></i>
                         <span>オリジナル検定作成</span>
                     </button>
-                    <button onclick="navigateTo('history')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition flex items-center space-x-2">
+                    <button type="button" data-nav="history" onclick="navigateTo('history')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition flex items-center space-x-2">
                         <i class="fa-solid fa-chart-line"></i>
                         <span>成績・履歴</span>
                     </button>
-                    <button onclick="navigateTo('support')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition flex items-center space-x-2">
+                    <button type="button" data-nav="support" onclick="navigateTo('support')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition flex items-center space-x-2">
                         <i class="fa-solid fa-headset"></i>
                         <span>サポート</span>
                     </button>
                 </nav>
 
                 <!-- ユーザー状態・同期インジケータ -->
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-2">
+                    <button type="button" id="theme-toggle" onclick="cycleTheme()" class="w-9 h-9 rounded-lg text-slate-500 hover:text-brand-600 hover:bg-slate-100 transition flex items-center justify-center" aria-label="表示テーマ" title="表示テーマ">
+                        <i class="fa-solid fa-circle-half-stroke"></i>
+                    </button>
                     <div id="sync-badge" class="flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs bg-slate-50 text-slate-600 border border-slate-200">
                         <span class="w-2 h-2 rounded-full bg-slate-400 animate-pulse"></span>
                         <span class="font-medium">接続中…</span>
@@ -146,10 +196,10 @@
                     </div>
                     <div class="relative z-10 max-w-2xl">
                         <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-sm mb-3">
-                            <i class="fa-solid fa-bolt mr-1 text-amber-300"></i> 全検定 各20問収録完了
+                            <i class="fa-solid fa-bolt mr-1 text-amber-300"></i> 9検定・各20問を収録
                         </span>
-                        <h2 class="text-2xl sm:text-3xl font-extrabold mb-3">あらゆる検定の受検勉強をここ一つで</h2>
-                        <p class="text-blue-100 text-sm mb-6">全カテゴリ・各検定ともに20問の本格的な実力問題セットを完備。各テーマをじっくり攻略しましょう！</p>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold mb-3">資格・検定の学習をここ一つで</h2>
+                        <p class="text-blue-100 text-sm mb-6">IT・語学・ビジネス・教養の練習問題に加え、自分で問題を作って学習することもできます。苦手な問題は復習機能で繰り返し解きましょう。</p>
                         
                         <!-- タスクタイトル入力フォーム -->
                         <form id="task-form" onsubmit="handleAddTask(event)" class="flex flex-col sm:flex-row gap-2">
@@ -322,7 +372,7 @@
                 <!-- 固定ヘッダー（進捗・タイマー・終了） -->
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
                     <div class="flex items-center space-x-3">
-                        <button onclick="confirmExitExam()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg hover:bg-slate-100 transition" title="演習を中断">
+                        <button type="button" onclick="confirmExitExam()" class="text-slate-400 hover:text-slate-600 p-2 rounded-lg hover:bg-slate-100 transition" title="演習を中断" aria-label="演習を中断してホームへ">
                             <i class="fa-solid fa-xmark text-xl"></i>
                         </button>
                         <div>
@@ -614,7 +664,7 @@
                         </p>
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between items-center">
-                        <span>バージョン: 3.2.0-20QuestionsAll</span>
+                        <span>バージョン: 4.0.0</span>
                         <span class="text-emerald-400">Firebase + ローカル保存</span>
                     </div>
                 </div>
@@ -623,24 +673,28 @@
         </main>
 
         <!-- モバイル固定ボトムナビゲーション -->
-        <div class="md:hidden sticky bottom-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-30 px-4 py-2 flex justify-around">
-            <button onclick="navigateTo('home')" class="flex flex-col items-center text-slate-500 hover:text-brand-600">
+        <nav class="md:hidden sticky bottom-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-30 px-2 py-2 flex justify-around" aria-label="メインメニュー">
+            <button type="button" data-nav="home" onclick="navigateTo('home')" class="flex flex-col items-center px-2 text-slate-500 hover:text-brand-600">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span class="text-[10px] mt-0.5">ホーム</span>
             </button>
-            <button onclick="if (navigateTo('home')) scrollToExams();" class="flex flex-col items-center text-slate-500 hover:text-brand-600">
+            <button type="button" onclick="navigateTo('home').then(ok => ok && scrollToExams())" class="flex flex-col items-center px-2 text-slate-500 hover:text-brand-600">
                 <i class="fa-solid fa-layer-group text-lg"></i>
                 <span class="text-[10px] mt-0.5">検定一覧</span>
             </button>
-            <button onclick="openCustomExamModal()" class="flex flex-col items-center text-amber-600">
+            <button type="button" onclick="openCustomExamModal()" class="flex flex-col items-center px-2 text-amber-600">
                 <i class="fa-solid fa-square-plus text-lg"></i>
                 <span class="text-[10px] mt-0.5">自作作成</span>
             </button>
-            <button onclick="navigateTo('history')" class="flex flex-col items-center text-slate-500 hover:text-brand-600">
+            <button type="button" data-nav="history" onclick="navigateTo('history')" class="flex flex-col items-center px-2 text-slate-500 hover:text-brand-600">
                 <i class="fa-solid fa-chart-line text-lg"></i>
                 <span class="text-[10px] mt-0.5">成績履歴</span>
             </button>
-        </div>
+            <button type="button" data-nav="support" onclick="navigateTo('support')" class="flex flex-col items-center px-2 text-slate-500 hover:text-brand-600">
+                <i class="fa-solid fa-headset text-lg"></i>
+                <span class="text-[10px] mt-0.5">サポート</span>
+            </button>
+        </nav>
 
         <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
             <p>© 2026 QualiQ - 総合検定・資格学習プラットフォーム</p>
@@ -649,7 +703,7 @@
 
     <!-- カスタム検定 作成・編集モーダル -->
     <div id="custom-exam-modal" class="hidden fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl fade-in relative my-8">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl fade-in relative my-8" role="dialog" aria-modal="true" aria-labelledby="cust-modal-title">
             <button type="button" onclick="closeCustomExamModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600" aria-label="閉じる">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
@@ -722,17 +776,18 @@
         </div>
     </div>
 
-    <!-- カスタム通知モーダル -->
-    <div id="app-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center fade-in">
-            <div id="modal-icon" class="w-12 h-12 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-xl mx-auto mb-3">
+    <!-- 通知・確認ダイアログ（alert / confirm の代わり） -->
+    <div id="app-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4" onclick="if (event.target === this) closeModal(false)">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center fade-in" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-message">
+            <div id="modal-icon" class="w-12 h-12 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-xl mx-auto mb-3" aria-hidden="true">
                 <i class="fa-solid fa-info"></i>
             </div>
             <h4 id="modal-title" class="text-lg font-bold text-slate-800 mb-2">通知</h4>
             <p id="modal-message" class="text-sm text-slate-600 mb-6 whitespace-pre-line text-left sm:text-center">メッセージ内容</p>
-            <button onclick="closeModal()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm">
-                確認
-            </button>
+            <div class="flex gap-2">
+                <button type="button" id="modal-cancel" onclick="closeModal(false)" class="hidden flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm">キャンセル</button>
+                <button type="button" id="modal-ok" onclick="closeModal(true)" class="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm">確認</button>
+            </div>
         </div>
     </div>
 
@@ -1376,6 +1431,7 @@
         window.addEventListener('load', () => {
             initAuthAndData();
             renderExamsGrid();
+            applyTheme();
             renderAnswerModeToggle();
             renderLearningInsights();
             renderCategoryTabs();
@@ -1390,21 +1446,17 @@
                 showView(view);
             }
 
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                const appContainer = document.getElementById('app-container');
-                splash.classList.add('fade-out');
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    appContainer.classList.remove('hidden');
-                }, 400);
-            }, 1000);
+            // 読み込みが終わったらすぐに表示する（演出のための待ち時間は入れない）
+            const splash = document.getElementById('splash-screen');
+            document.getElementById('app-container').classList.remove('hidden');
+            splash.classList.add('fade-out');
+            setTimeout(() => { splash.style.display = 'none'; }, 300);
         });
 
         // ===== 画面遷移（URL ハッシュと連動。ブラウザの戻る・進むに対応） =====
         const VIEWS = ['home', 'exam', 'result', 'history', 'support'];
         let currentView = 'home';
-        const SUSPEND_MESSAGE = '演習を中断しますか？\n途中までの解答は保存され、ホームの「続きから再開」で再開できます。';
+        const SUSPEND_MESSAGE = '途中までの解答は保存され、ホームの「続きから再開」で再開できます。';
 
         function viewFromHash() {
             const v = decodeURIComponent(location.hash.replace(/^#/, ''));
@@ -1417,21 +1469,28 @@
                 if (el) el.classList.toggle('hidden', v !== viewName);
             });
             currentView = viewName;
+            document.querySelectorAll('[data-nav]').forEach(btn => {
+                if (btn.dataset.nav === viewName) btn.setAttribute('aria-current', 'page');
+                else btn.removeAttribute('aria-current');
+            });
             if (viewName === 'history') renderHistoryChart();
             if (viewName === 'home') renderResumeBanner();
         }
 
         // 演習中に別画面へ移るときは確認し、OKなら中断（進捗は保存）する。キャンセルなら false
-        function confirmLeaveExam(nextView) {
+        async function confirmLeaveExam(nextView) {
             if (!(window.appState.examInProgress && currentView === 'exam' && nextView !== 'exam')) return true;
-            if (!confirm(SUSPEND_MESSAGE)) return false;
+            const ok = await appConfirm(SUSPEND_MESSAGE, { title: '演習を中断しますか？', okLabel: '中断する', cancelLabel: '演習を続ける' });
+            // 確認中に演習が終わった・別の操作で離れた場合は何もしない
+            if (!ok || !window.appState.examInProgress || currentView !== 'exam') return false;
             suspendExamSession();
             return true;
         }
 
-        window.navigateTo = function(viewName) {
+        // 画面を切り替える。演習中は確認ダイアログを出すため Promise<boolean> を返す
+        window.navigateTo = async function(viewName) {
             if (!VIEWS.includes(viewName)) viewName = 'home';
-            if (!confirmLeaveExam(viewName)) return false;
+            if (!(await confirmLeaveExam(viewName))) return false;
             showView(viewName);
             const hash = `#${viewName}`;
             if (location.hash !== hash) history.pushState({ view: viewName }, '', hash);
@@ -1440,8 +1499,10 @@
 
         window.addEventListener('popstate', () => {
             const view = viewFromHash();
-            if (!confirmLeaveExam(view)) {
+            if (window.appState.examInProgress && currentView === 'exam' && view !== 'exam') {
+                // いったん演習画面の URL に戻し、確認して OK なら改めて移動する
                 history.pushState({ view: 'exam' }, '', '#exam');
+                navigateTo(view);
                 return;
             }
             // 進行中の演習や表示できる結果がないのに演習・結果画面へ戻った場合はホームへ
@@ -1541,8 +1602,8 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        window.discardSavedSession = function() {
-            if (!confirm('中断した演習を破棄しますか？')) return;
+        window.discardSavedSession = async function() {
+            if (!(await appConfirm('途中までの解答は失われます。', { title: '中断した演習を破棄しますか？', okLabel: '破棄する', danger: true }))) return;
             clearActiveSession();
             renderResumeBanner();
         };
@@ -1559,7 +1620,7 @@
             if (e.defaultPrevented || e.isComposing || e.ctrlKey || e.metaKey || e.altKey) return;
 
             if (e.key === 'Escape') {
-                if (isModalOpen('app-modal')) { closeModal(); e.preventDefault(); }
+                if (isModalOpen('app-modal')) { closeModal(false); e.preventDefault(); }
                 else if (isModalOpen('custom-exam-modal')) { closeCustomExamModal(); e.preventDefault(); }
                 return;
             }
@@ -1683,7 +1744,7 @@
             }
 
             grid.innerHTML = filtered.map(exam => `
-                <div data-exam-id="${escapeHtml(exam.id)}" onclick="startExamById(this.dataset.examId)" class="group p-5 bg-white hover:bg-brand-50/50 border border-slate-200 hover:border-brand-300 rounded-2xl transition shadow-sm hover:shadow-md text-left flex flex-col justify-between cursor-pointer relative overflow-hidden">
+                <div data-exam-id="${escapeHtml(exam.id)}" onclick="onExamCardClick(event, this.dataset.examId)" class="group focus-within:ring-2 focus-within:ring-brand-500 p-5 bg-white hover:bg-brand-50/50 border border-slate-200 hover:border-brand-300 rounded-2xl transition shadow-sm hover:shadow-md text-left flex flex-col justify-between cursor-pointer relative overflow-hidden">
                     <div>
                         <div class="flex items-center justify-between mb-3">
                             <div class="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-brand-500 group-hover:text-white text-brand-600 flex items-center justify-center text-xl transition shrink-0">
@@ -1702,7 +1763,10 @@
                                 </span>
                             </span>
                         </div>
-                        <h4 class="font-bold text-slate-800 text-base group-hover:text-brand-600 transition mb-1">${escapeHtml(exam.name)}</h4>
+                        <h4 class="font-bold text-slate-800 text-base group-hover:text-brand-600 transition mb-1">
+                            <button type="button" data-exam-id="${escapeHtml(exam.id)}" onclick="startExamById(this.dataset.examId)" class="text-left focus:outline-none"
+                                aria-label="${escapeHtml(exam.name)}の演習を開始（${Math.min(exam.questions.length, SESSION_MAX_QUESTIONS)}問）">${escapeHtml(exam.name)}</button>
+                        </h4>
                         <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-4">${escapeHtml(exam.desc)}</p>
                     </div>
                     <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs font-semibold text-slate-400 group-hover:text-brand-600">
@@ -1715,6 +1779,12 @@
                 </div>
             `).join('');
         }
+
+        // カードのどこをクリックしても開始する（カード内のボタンはそれぞれの動作を優先）
+        window.onExamCardClick = function(e, examId) {
+            if (e.target.closest('button')) return;
+            startExamById(examId);
+        };
 
         // --- オリジナル自作検定の作成・編集 ---
         const CUSTOM_MAX_QUESTIONS = 100;
@@ -1821,19 +1891,18 @@
             } else {
                 renderEditorQuestions([blankQuestion()]);
             }
-            document.getElementById('custom-exam-modal').classList.remove('hidden');
-            document.getElementById('cust-exam-title').focus();
+            openDialog(document.getElementById('custom-exam-modal'), document.getElementById('cust-exam-title'));
         };
 
         window.closeCustomExamModal = function() {
-            document.getElementById('custom-exam-modal').classList.add('hidden');
+            closeDialog(document.getElementById('custom-exam-modal'));
             editingExamId = null;
         };
 
-        window.deleteCustomExam = function(examId) {
+        window.deleteCustomExam = async function(examId) {
             const exam = window.appState.customExams.find(e => e.id === examId);
             if (!exam) return;
-            if (!confirm(`「${exam.name}」を削除しますか？\nこの操作は取り消せません。`)) return;
+            if (!(await appConfirm('この操作は取り消せません。', { title: `「${exam.name}」を削除しますか？`, okLabel: '削除する', danger: true }))) return;
             removeRecords('customExams', [examId]);
         };
 
@@ -2133,7 +2202,7 @@
                     passNote: found.passNote || ''
                 });
             } else {
-                alert("問題データを読み込めませんでした。");
+                showModal("開始できません", "この検定には問題が登録されていません。");
             }
         };
 
@@ -2149,7 +2218,7 @@
             const exams = MASTER_EXAMS_CATALOG.filter(ex => ex.category === cat);
             const selected = shuffleArray(buildQuestionPool(exams)).slice(0, SESSION_MAX_QUESTIONS);
             if (selected.length === 0) {
-                alert("このカテゴリには問題がありません。");
+                showModal("開始できません", "このカテゴリには問題がありません。");
                 return;
             }
             initExamSession(selected, `${cat} ミックス (${selected.length}問)`, { groupName: `${cat} ミックス` });
@@ -2452,7 +2521,7 @@
                 }
 
                 return `
-                    <button onclick="jumpToQuestion(${idx})" 
+                    <button type="button" onclick="jumpToQuestion(${idx})" aria-label="問題${idx + 1}${revealed ? (userAns === q.correctIndex ? '（正解）' : '（不正解）') : userAns !== undefined ? '（解答済み）' : ''}" ${isCurrent ? 'aria-current="step"' : ''}
                         class="w-7 h-7 rounded-full text-xs border flex items-center justify-center transition-all ${bgClass}">
                         ${idx + 1}
                     </button>
@@ -2521,7 +2590,7 @@
                 }
 
                 return `
-                    <button onclick="handleOptionSelect(${curIdx}, ${optIdx})" ${revealed ? 'disabled' : ''}
+                    <button type="button" onclick="handleOptionSelect(${curIdx}, ${optIdx})" ${revealed ? 'disabled' : ''} aria-pressed="${isSelected}"
                         class="w-full text-left p-4 rounded-2xl border-2 transition flex items-center space-x-3 disabled:cursor-default ${btnStyle}">
                         <span class="w-7 h-7 rounded-full border flex items-center justify-center shrink-0 font-bold text-xs ${badgeStyle}">
                             ${labels[optIdx]}
@@ -2615,7 +2684,7 @@
             const total = window.appState.currentExamQuestions.length;
 
             if (window.appState.selectedAnswers[curIdx] === undefined) {
-                alert("選択肢を1つ選んでください。");
+                showModal("選択肢を選んでください", "解答する選択肢を1つ選んでから進んでください。");
                 return;
             }
 
@@ -2661,9 +2730,12 @@
             const answeredCount = Object.keys(answers).length;
 
             if (answeredCount < questions.length) {
-                if (!confirm(`全${questions.length}問中、まだ ${questions.length - answeredCount} 問が未解答です。採点を実行して解答・解説を表示しますか？`)) {
-                    return;
-                }
+                const ok = await appConfirm(`未解答の問題は不正解として採点されます。`, {
+                    title: `未解答が ${questions.length - answeredCount} 問あります`,
+                    okLabel: '採点する',
+                    cancelLabel: '問題に戻る'
+                });
+                if (!ok || !window.appState.examInProgress) return;
             }
 
             clearInterval(window.appState.timerInterval);
@@ -2816,10 +2888,10 @@
             renderHistory();
         };
 
-        window.deleteHistoryRecord = function(id) {
+        window.deleteHistoryRecord = async function(id) {
             const item = window.appState.history.find(h => h.id === id);
             if (!item) return;
-            if (!confirm(`${formatDateTime(item.createdAt)} の「${item.title}」の記録を削除しますか？\n問題ごとの正誤（復習・苦手分析）からも除かれます。`)) return;
+            if (!(await appConfirm(`${formatDateTime(item.createdAt)} の「${item.title}」\n問題ごとの正誤（復習・苦手分析）からも除かれます。`, { title: 'この記録を削除しますか？', okLabel: '削除する', danger: true }))) return;
             removeRecords('history', [id]);
         };
 
@@ -2906,6 +2978,12 @@
                 historyChartInstance.destroy();
             }
 
+            const isDark = document.documentElement.classList.contains('dark');
+            if (window.Chart && Chart.defaults) {
+                Chart.defaults.color = isDark ? '#94a3b8' : '#64748b';
+                Chart.defaults.borderColor = isDark ? 'rgba(148, 163, 184, 0.15)' : 'rgba(0, 0, 0, 0.1)';
+            }
+
             historyChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -2950,7 +3028,7 @@
         }
 
         window.clearHistoryData = async function() {
-            if (!confirm("すべての受検履歴をクリアしますか？")) return;
+            if (!(await appConfirm('すべての受検履歴と、問題ごとの正誤（復習・苦手分析）が削除されます。この操作は取り消せません。', { title: '履歴をすべて削除しますか？', okLabel: 'すべて削除', danger: true }))) return;
 
             removeRecords('history', window.appState.history.map(h => h.id));
 
@@ -3025,15 +3103,134 @@
             }
         };
 
-        function showModal(title, msg) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-message').textContent = msg;
-            document.getElementById('app-modal').classList.remove('hidden');
+        // ===== ダイアログ（フォーカスの閉じ込め・復帰つき） =====
+        const dialogStack = [];
+
+        function dialogFocusables(el) {
+            return [...el.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+                .filter(n => !n.disabled && n.getClientRects().length > 0);
         }
 
-        window.closeModal = function() {
-            document.getElementById('app-modal').classList.add('hidden');
+        function openDialog(el, focusEl) {
+            if (!dialogStack.some(d => d.el === el)) {
+                dialogStack.push({ el, returnFocus: document.activeElement });
+            }
+            el.classList.remove('hidden');
+            const target = focusEl || dialogFocusables(el)[0];
+            if (target) target.focus();
+        }
+
+        function closeDialog(el) {
+            el.classList.add('hidden');
+            const i = dialogStack.findIndex(d => d.el === el);
+            if (i < 0) return;
+            const [d] = dialogStack.splice(i, 1);
+            if (d.returnFocus && document.contains(d.returnFocus) && typeof d.returnFocus.focus === 'function') {
+                d.returnFocus.focus();
+            }
+        }
+
+        function topDialog() {
+            return dialogStack.length > 0 ? dialogStack[dialogStack.length - 1].el : null;
+        }
+
+        // Tab キーでダイアログの外へフォーカスが出ないようにする
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Tab') return;
+            const el = topDialog();
+            if (!el) return;
+            const items = dialogFocusables(el);
+            if (items.length === 0) { e.preventDefault(); return; }
+            const first = items[0], last = items[items.length - 1];
+            if (!el.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+            else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        });
+
+        let modalResolver = null;
+        const MODAL_ICONS = {
+            info: ['bg-brand-100 text-brand-600', 'fa-info'],
+            question: ['bg-amber-100 text-amber-600', 'fa-question'],
+            danger: ['bg-rose-100 text-rose-600', 'fa-triangle-exclamation']
         };
+
+        function openAppModal({ title, message, okLabel = '確認', cancelLabel = null, danger = false, icon = 'info' }) {
+            if (modalResolver) { const r = modalResolver; modalResolver = null; r(false); }
+            const el = document.getElementById('app-modal');
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            const [iconBox, iconName] = MODAL_ICONS[danger ? 'danger' : icon] || MODAL_ICONS.info;
+            const iconEl = document.getElementById('modal-icon');
+            iconEl.className = `w-12 h-12 rounded-full ${iconBox} flex items-center justify-center text-xl mx-auto mb-3`;
+            iconEl.innerHTML = `<i class="fa-solid ${iconName}"></i>`;
+            const okBtn = document.getElementById('modal-ok');
+            const cancelBtn = document.getElementById('modal-cancel');
+            okBtn.textContent = okLabel;
+            okBtn.className = `flex-1 py-2.5 ${danger ? 'bg-rose-600 hover:bg-rose-700' : 'bg-brand-600 hover:bg-brand-700'} text-white font-bold rounded-xl text-sm`;
+            cancelBtn.textContent = cancelLabel || 'キャンセル';
+            cancelBtn.classList.toggle('hidden', !cancelLabel);
+            return new Promise(resolve => {
+                modalResolver = resolve;
+                // 取り消せない操作の確認では、誤操作を防ぐため「キャンセル」に初期フォーカス
+                openDialog(el, cancelLabel && danger ? cancelBtn : okBtn);
+            });
+        }
+
+        function showModal(title, msg) {
+            return openAppModal({ title, message: msg });
+        }
+
+        // confirm() の代わり。OK なら true、キャンセル・Esc・背景クリックなら false
+        function appConfirm(message, { title = '確認', okLabel = 'OK', cancelLabel = 'キャンセル', danger = false } = {}) {
+            return openAppModal({ title, message, okLabel, cancelLabel, danger, icon: 'question' });
+        }
+
+        window.closeModal = function(result = false) {
+            const el = document.getElementById('app-modal');
+            if (el.classList.contains('hidden')) return;
+            closeDialog(el);
+            const r = modalResolver;
+            modalResolver = null;
+            if (r) r(!!result);
+        };
+
+        // ===== 表示テーマ（システム設定 / ライト / ダーク） =====
+        const THEME_KEY = 'quailq:theme';
+        const THEME_LABELS = {
+            system: ['fa-circle-half-stroke', '表示テーマ: システム設定に合わせる'],
+            light: ['fa-sun', '表示テーマ: ライト'],
+            dark: ['fa-moon', '表示テーマ: ダーク']
+        };
+        const darkMedia = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+        function getThemePref() {
+            try { const v = localStorage.getItem(THEME_KEY); return THEME_LABELS[v] ? v : 'system'; } catch (_) { return 'system'; }
+        }
+
+        function applyTheme() {
+            const pref = getThemePref();
+            const dark = pref === 'dark' || (pref === 'system' && !!darkMedia && darkMedia.matches);
+            document.documentElement.classList.toggle('dark', dark);
+            const btn = document.getElementById('theme-toggle');
+            if (btn) {
+                const [icon, label] = THEME_LABELS[pref];
+                btn.innerHTML = `<i class="fa-solid ${icon}"></i>`;
+                btn.setAttribute('aria-label', `${label}（クリックで切り替え）`);
+                btn.title = label;
+            }
+            if (currentView === 'history') renderHistoryChart();
+        }
+
+        window.cycleTheme = function() {
+            const order = ['system', 'light', 'dark'];
+            const next = order[(order.indexOf(getThemePref()) + 1) % order.length];
+            try { localStorage.setItem(THEME_KEY, next); } catch (_) {}
+            applyTheme();
+        };
+
+        if (darkMedia && darkMedia.addEventListener) {
+            darkMedia.addEventListener('change', () => { if (getThemePref() === 'system') applyTheme(); });
+        }
 
         // HTML に埋め込む値は必ずこれを通す（文字列以外も安全に扱う）
         function escapeHtml(value) {
