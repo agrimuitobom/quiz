@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuoliQ - 総合検定・練習問題＆学習プラットフォーム</title>
+    <title>QualiQ - 総合検定・練習問題＆学習プラットフォーム</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -57,7 +57,7 @@
                     ALL EXAMS
                 </div>
             </div>
-            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">QuoliQ</h1>
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">QualiQ</h1>
             <p class="text-blue-200 text-sm sm:text-base max-w-xs mx-auto mb-8 font-light">
                 あらゆる検定・資格に対応！<br>各検定20問のオリジナル練習問題で学習
             </p>
@@ -82,7 +82,7 @@
                         <i class="fa-solid fa-graduation-cap text-lg"></i>
                     </div>
                     <div>
-                        <span class="text-lg font-bold bg-gradient-to-r from-brand-700 to-indigo-700 bg-clip-text text-transparent">QuoliQ</span>
+                        <span class="text-lg font-bold bg-gradient-to-r from-brand-700 to-indigo-700 bg-clip-text text-transparent">QualiQ</span>
                         <span class="block text-[10px] text-slate-400 font-medium -mt-1">ALL EXAMS PLATFORM</span>
                     </div>
                 </div>
@@ -228,7 +228,7 @@
                         <div>
                             <h3 class="font-bold text-slate-800 text-xl flex items-center gap-2">
                                 <i class="fa-solid fa-layer-group text-brand-600"></i>
-                                対象の検定を選択して演習開始 (全20問)
+                                対象の検定を選択して演習開始 (1回最大20問)
                             </h3>
                             <p class="text-xs text-slate-500 mt-1">希望の検定を検索するか、カテゴリで選択できます</p>
                         </div>
@@ -369,9 +369,16 @@
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
+                <p class="hidden sm:block text-center text-[11px] text-slate-400">
+                    キーボード操作：<kbd class="px-1 border rounded bg-white">1</kbd>〜<kbd class="px-1 border rounded bg-white">4</kbd> 選択 ／
+                    <kbd class="px-1 border rounded bg-white">Enter</kbd> 確定・次へ ／
+                    <kbd class="px-1 border rounded bg-white">←</kbd> <kbd class="px-1 border rounded bg-white">→</kbd> 前後の問題 ／
+                    <kbd class="px-1 border rounded bg-white">B</kbd> ブックマーク ／
+                    <kbd class="px-1 border rounded bg-white">Esc</kbd> ダイアログを閉じる
+                </p>
             </section>
 
-            <!-- 3. 結果発表 ＆ 全20問解答・解説画面 (Result View) -->
+            <!-- 3. 結果発表 ＆ 解答・解説画面 (Result View) -->
             <section id="view-result" class="hidden space-y-8 fade-in">
                 <!-- 結果サマリーカード -->
                 <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 text-center">
@@ -379,7 +386,7 @@
                         <i class="fa-solid fa-trophy text-4xl"></i>
                     </div>
                     <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-1">採点結果発表</h2>
-                    <p class="text-slate-500 text-sm mb-6">全20問の回答お疲れ様でした！すべての問題の正誤と解説を以下で確認できます。</p>
+                    <p id="res-subtitle" class="text-slate-500 text-sm mb-6">回答お疲れ様でした！すべての問題の正誤と解説を以下で確認できます。</p>
 
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto mb-8">
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
@@ -399,6 +406,7 @@
                             <span id="res-status" class="text-2xl font-black text-amber-500">判定中</span>
                         </div>
                     </div>
+                    <p id="res-passline" class="-mt-4 mb-8 text-xs text-slate-500"></p>
 
                     <div class="flex flex-wrap justify-center gap-4">
                         <button id="btn-retry-wrong" onclick="retryLastWrong()" class="hidden px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-sm shadow-md transition">
@@ -413,14 +421,14 @@
                     </div>
                 </div>
 
-                <!-- 全20問題の解答 ＆ 詳細解説一覧 -->
+                <!-- 全問題の解答 ＆ 詳細解説一覧 -->
                 <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200">
                     <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                         <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
                             <i class="fa-solid fa-book-open-reader text-brand-600"></i>
-                            全20問の解答と解説一覧
+                            <span id="res-list-title">解答と解説一覧</span>
                         </h3>
-                        <span class="text-xs font-semibold px-3 py-1 bg-brand-50 text-brand-700 rounded-full">全20問一覧</span>
+                        <span id="res-list-chip" class="text-xs font-semibold px-3 py-1 bg-brand-50 text-brand-700 rounded-full">0問</span>
                     </div>
                     
                     <div id="explanations-list" class="space-y-6">
@@ -434,11 +442,19 @@
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div>
                         <h2 class="text-2xl font-bold text-slate-800">成績・受検履歴</h2>
-                        <p class="text-slate-500 text-sm">過去に行った各検定(20問演習)の成績や進捗を一覧で確認できます。</p>
+                        <p class="text-slate-500 text-sm">これまでの演習の成績や進捗を確認できます。検定ごとに絞り込むと、推移グラフに合格ラインも表示されます。</p>
                     </div>
                     <button onclick="clearHistoryData()" class="text-xs text-rose-500 hover:text-rose-700 font-semibold border border-rose-200 rounded-lg px-3 py-2 bg-rose-50/50 self-start sm:self-auto">
                         <i class="fa-solid fa-trash-can mr-1"></i> 履歴をクリア
                     </button>
+                </div>
+
+                <!-- 絞り込み -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <label for="history-filter" class="text-xs font-bold text-slate-500"><i class="fa-solid fa-filter mr-1"></i>表示する演習</label>
+                    <select id="history-filter" onchange="setHistoryFilter(this.value)" class="px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-brand-500">
+                        <option value="ALL">すべての演習</option>
+                    </select>
                 </div>
 
                 <!-- 分析グラフ ＆ 統計 -->
@@ -446,7 +462,7 @@
                     <div class="md:col-span-2 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
                         <h3 class="font-bold text-slate-800 mb-4 text-sm flex items-center gap-2">
                             <i class="fa-solid fa-chart-column text-brand-600"></i>
-                            直近の正答率推移
+                            直近10回の正答率推移
                         </h3>
                         <div class="h-64 relative">
                             <canvas id="history-chart"></canvas>
@@ -454,13 +470,18 @@
                     </div>
                     <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-center space-y-6">
                         <div>
-                            <span class="text-xs text-slate-400 font-semibold uppercase">総復習（演習）回数</span>
+                            <span class="text-xs text-slate-400 font-semibold uppercase">演習回数</span>
                             <div id="stat-total-count" class="text-3xl font-black text-slate-800 mt-1">0 回</div>
                         </div>
                         <hr class="border-slate-100">
                         <div>
                             <span class="text-xs text-slate-400 font-semibold uppercase">平均正答率</span>
                             <div id="stat-avg-score" class="text-3xl font-black text-brand-600 mt-1">0 %</div>
+                        </div>
+                        <hr class="border-slate-100">
+                        <div>
+                            <span class="text-xs text-slate-400 font-semibold uppercase">合格ライン到達</span>
+                            <div id="stat-pass-count" class="text-3xl font-black text-emerald-600 mt-1">0 回</div>
                         </div>
                     </div>
                 </div>
@@ -494,15 +515,16 @@
                             <thead>
                                 <tr class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase tracking-wider border-b border-slate-200">
                                     <th class="py-3 px-6">日時</th>
-                                    <th class="py-3 px-6">対象検定・年度</th>
+                                    <th class="py-3 px-6">対象の演習</th>
                                     <th class="py-3 px-6 text-center">スコア</th>
                                     <th class="py-3 px-6 text-center">正答率</th>
                                     <th class="py-3 px-6 text-right">所要時間</th>
+                                    <th class="py-3 px-4"><span class="sr-only">操作</span></th>
                                 </tr>
                             </thead>
                             <tbody id="history-table-body" class="divide-y divide-slate-100 text-sm">
                                 <tr>
-                                    <td colspan="5" class="py-8 text-center text-slate-400">履歴データがありません</td>
+                                    <td colspan="6" class="py-8 text-center text-slate-400">履歴データがありません</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -525,7 +547,7 @@
                         </h3>
                         <div class="border-b border-slate-100 pb-3">
                             <h4 class="font-bold text-slate-700 text-sm">Q. 1セッションの問題数は何問ですか？</h4>
-                            <p class="text-xs text-slate-500 mt-1">すべての検定カテゴリ・問題セットは「全20問」に統一して作成・構成されています。</p>
+                            <p class="text-xs text-slate-500 mt-1">1回の演習は最大20問です。収録済みの検定は各20問、自作検定は最大100問まで登録でき、21問以上ある場合は毎回ランダムに20問を出題します。</p>
                         </div>
                         <div class="border-b border-slate-100 pb-3">
                             <h4 class="font-bold text-slate-700 text-sm">Q. 収録されているのは実際の過去問ですか？</h4>
@@ -584,11 +606,11 @@
                     <div>
                         <div class="flex items-center space-x-2 text-amber-400 text-xs font-bold mb-2">
                             <i class="fa-brands fa-github text-lg"></i>
-                            <span>QuoliQ Architecture</span>
+                            <span>QualiQ Architecture</span>
                         </div>
-                        <h3 class="text-lg font-bold mb-2">全検定 20問統一版プラットフォーム</h3>
+                        <h3 class="text-lg font-bold mb-2">総合検定 学習プラットフォーム</h3>
                         <p class="text-slate-300 text-xs leading-relaxed mb-4">
-                            IT・語学・ビジネス・教養など全カテゴリーで20問ずつのオリジナル練習問題セットを提供。
+                            IT・語学・ビジネス・教養などのオリジナル練習問題と、自作検定・復習機能で学習をサポートします。
                         </p>
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between items-center">
@@ -621,7 +643,7 @@
         </div>
 
         <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-            <p>© 2026 QuoliQ - 総合検定・資格学習プラットフォーム (各検定20問収録)</p>
+            <p>© 2026 QualiQ - 総合検定・資格学習プラットフォーム</p>
         </footer>
     </div>
 
@@ -653,9 +675,15 @@
                         </select>
                     </div>
                 </div>
-                <div>
-                    <label for="cust-exam-desc" class="block font-semibold text-slate-700 mb-1">説明（任意）</label>
-                    <input type="text" id="cust-exam-desc" maxlength="200" placeholder="例: 過去に間違えた論点をまとめた自分用問題集" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500">
+                <div class="grid sm:grid-cols-3 gap-3">
+                    <div class="sm:col-span-2">
+                        <label for="cust-exam-desc" class="block font-semibold text-slate-700 mb-1">説明（任意）</label>
+                        <input type="text" id="cust-exam-desc" maxlength="200" placeholder="例: 過去に間違えた論点をまとめた自分用問題集" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500">
+                    </div>
+                    <div>
+                        <label for="cust-exam-passline" class="block font-semibold text-slate-700 mb-1">合格ライン（%）</label>
+                        <input type="number" id="cust-exam-passline" min="1" max="100" step="1" value="70" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500">
+                    </div>
                 </div>
 
                 <!-- 一括取り込み -->
@@ -708,7 +736,7 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic & Master Data (全検定20問完全収録ジェネレーター) -->
+    <!-- JavaScript Logic & Master Data -->
     <script type="module">
         // Firebase は動的 import で読み込む（CDN に届かなくてもアプリ本体は動かすため）
         const FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/11.6.1';
@@ -752,6 +780,8 @@
             sessionMode: 'batch',   // 実施中の演習のモード
             revealed: {},           // 一問ずつモードで答え合わせ済みの問題 index
             lastWrongQuestions: [], // 直前の演習で間違えた問題
+            sessionMeta: { groupName: '', passLine: 70, passNote: '' },
+            historyFilter: 'ALL',   // 成績画面の絞り込み（groupName）
             examInProgress: false,  // 演習の途中か
             hasResult: false,       // 結果画面に表示できる結果があるか
             activeCategory: 'ALL',
@@ -991,6 +1021,8 @@
             // 1. IT・情報系
             {
                 id: 'itpass',
+                passLine: 60,
+                passNote: '総合評価 600/1000 点以上が基準',
                 name: 'ITパスポート試験',
                 category: 'IT・情報系',
                 badge: '全20問収録',
@@ -1001,6 +1033,8 @@
             },
             {
                 id: 'fe',
+                passLine: 60,
+                passNote: '科目A・B 各 600/1000 点以上が基準',
                 name: '基本情報技術者試験',
                 category: 'IT・情報系',
                 badge: '全20問収録',
@@ -1011,6 +1045,8 @@
             },
             {
                 id: 'ap',
+                passLine: 60,
+                passNote: '午前・午後 各 60% 以上が基準',
                 name: '応用情報技術者試験',
                 category: 'IT・情報系',
                 badge: '全20問収録',
@@ -1023,6 +1059,8 @@
             // 2. 語学・国際系
             {
                 id: 'eiken',
+                passLine: 70,
+                passNote: '級・技能ごとの CSE スコアで判定されるため目安',
                 name: '実用英語技能検定 (英検)',
                 category: '語学・国際',
                 badge: '全20問収録',
@@ -1033,6 +1071,8 @@
             },
             {
                 id: 'toeic',
+                passLine: 70,
+                passNote: 'TOEIC に合否はないため目標の目安',
                 name: 'TOEIC L&R',
                 category: '語学・国際',
                 badge: '全20問収録',
@@ -1045,6 +1085,8 @@
             // 3. ビジネス・会計・法律系
             {
                 id: 'boki',
+                passLine: 70,
+                passNote: '2・3級は 70 点以上が基準',
                 name: '日商簿記検定',
                 category: 'ビジネス・会計・法律',
                 badge: '全20問収録',
@@ -1055,6 +1097,8 @@
             },
             {
                 id: 'fp',
+                passLine: 60,
+                passNote: '3級学科は 60% 以上が基準',
                 name: 'FP (ファイナンシャル・プランナー)',
                 category: 'ビジネス・会計・法律',
                 badge: '全20問収録',
@@ -1065,6 +1109,8 @@
             },
             {
                 id: 'takken',
+                passLine: 70,
+                passNote: '合格点は年度により変動（例年 70% 前後）',
                 name: '宅地建物取引士 (宅建)',
                 category: 'ビジネス・会計・法律',
                 badge: '全20問収録',
@@ -1077,6 +1123,8 @@
             // 4. 教養・学術・デザイン・その他
             {
                 id: 'kankan',
+                passLine: 70,
+                passNote: '2級は 80%、準2級以下は 70% 程度が目安',
                 name: '日本漢字能力検定 (漢検)',
                 category: '教養・学術・その他',
                 badge: '全20問収録',
@@ -1091,6 +1139,7 @@
         // ※ 並び順が変わると ID も変わるため、問題を追加するときは各セットの末尾に追加すること
         MASTER_EXAMS_CATALOG.forEach(ex => {
             ex.questions = ex.questions.map((q, i) => ({ ...q, title: stripTitlePrefix(q.title), qid: `${ex.id}-${i + 1}`, examId: ex.id }));
+            ex.badge = `全${ex.questions.length}問収録`;
         });
 
         // --- データ保存レイヤー（Firestore / localStorage 切替） ---
@@ -1420,6 +1469,7 @@
                     answers: window.appState.selectedAnswers,
                     revealed: window.appState.revealed,
                     mode: window.appState.sessionMode,
+                    meta: window.appState.sessionMeta,
                     elapsed: window.appState.elapsedSeconds
                 }));
             } catch (_) { /* 保存できない環境では中断データを残さない */ }
@@ -1477,6 +1527,7 @@
             appState.selectedAnswers = d.answers || {};
             appState.revealed = d.revealed || {};
             appState.sessionMode = d.mode === 'instant' ? 'instant' : 'batch';
+            appState.sessionMeta = normalizeSessionMeta(d.meta || {}, d.badge || '');
             appState.elapsedSeconds = d.elapsed || 0;
             appState.examInProgress = true;
             appState.hasResult = false;
@@ -1497,6 +1548,59 @@
         };
 
         window.addEventListener('pagehide', saveActiveSession);
+
+        // ===== キーボード操作 =====
+        function isModalOpen(id) {
+            const el = document.getElementById(id);
+            return !!el && !el.classList.contains('hidden');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.defaultPrevented || e.isComposing || e.ctrlKey || e.metaKey || e.altKey) return;
+
+            if (e.key === 'Escape') {
+                if (isModalOpen('app-modal')) { closeModal(); e.preventDefault(); }
+                else if (isModalOpen('custom-exam-modal')) { closeCustomExamModal(); e.preventDefault(); }
+                return;
+            }
+
+            if (currentView !== 'exam' || !window.appState.examInProgress) return;
+            if (isModalOpen('app-modal') || isModalOpen('custom-exam-modal')) return;
+            const target = e.target;
+            if (target && (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable)) return;
+
+            const appState = window.appState;
+            const idx = appState.currentQuestionIndex;
+            const q = appState.currentExamQuestions[idx];
+            if (!q) return;
+
+            if (['1', '2', '3', '4'].includes(e.key)) {
+                const optIdx = Number(e.key) - 1;
+                if (optIdx < q.options.length) {
+                    handleOptionSelect(idx, optIdx);
+                    e.preventDefault();
+                }
+            } else if (e.key === 'Enter') {
+                // 問題カード以外のボタン（ヘッダーなど）にフォーカスがあるときはブラウザ標準の動作に任せる
+                if (target && target.tagName === 'BUTTON' && !target.closest('#single-question-card')) return;
+                e.preventDefault();
+                if (appState.selectedAnswers[idx] !== undefined) confirmAnswerAndNext();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevQuestion();
+            } else if (e.key === 'ArrowRight') {
+                // 最後の問題では採点へ進まない（誤操作防止）
+                if (idx < appState.currentExamQuestions.length - 1) {
+                    e.preventDefault();
+                    nextQuestion();
+                }
+            } else if (e.key === 'b' || e.key === 'B') {
+                if (q.qid) {
+                    e.preventDefault();
+                    toggleBookmark(q.qid);
+                }
+            }
+        });
 
         window.scrollToExams = function() {
             const el = document.getElementById('exams-section');
@@ -1604,7 +1708,7 @@
                     <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs font-semibold text-slate-400 group-hover:text-brand-600">
                         <span>${escapeHtml(exam.questions.length)}問 収録</span>
                         <span class="flex items-center space-x-1">
-                            <span>${Math.min(exam.questions.length, 20)}問演習を開始</span>
+                            <span>${Math.min(exam.questions.length, SESSION_MAX_QUESTIONS)}問演習を開始</span>
                             <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
                         </span>
                     </div>
@@ -1703,6 +1807,7 @@
                 document.getElementById('cust-exam-title').value = exam.name || '';
                 document.getElementById('cust-exam-cat').value = exam.category || '教養・学術・その他';
                 const desc = exam.desc || '';
+                document.getElementById('cust-exam-passline').value = exam.passLine || DEFAULT_PASS_LINE;
                 document.getElementById('cust-exam-desc').value = /^(ユーザーが自作したオリジナル20問セット|自作問題 \d+問)$/.test(desc) ? '' : desc;
                 // 以前の形式の問題には「検定ID-番号」の qid を付けて、これまでの学習記録を引き継ぐ
                 const qs = (Array.isArray(exam.questions) ? exam.questions : []).map((q, i) => ({
@@ -1737,10 +1842,12 @@
             const name = document.getElementById('cust-exam-title').value.trim();
             const category = document.getElementById('cust-exam-cat').value;
             const descInput = document.getElementById('cust-exam-desc').value.trim();
+            const passLineInput = Number(document.getElementById('cust-exam-passline').value);
             const questions = collectEditorQuestions().filter(q => !isBlankQuestion(q));
 
             const errors = [];
             if (!name) errors.push('検定名を入力してください。');
+            if (!Number.isInteger(passLineInput) || passLineInput < 1 || passLineInput > 100) errors.push('合格ラインは 1〜100 の整数で入力してください。');
             if (questions.length === 0) errors.push('問題を1問以上入力してください。');
             if (questions.length > CUSTOM_MAX_QUESTIONS) errors.push(`問題は${CUSTOM_MAX_QUESTIONS}問までです。`);
             collectEditorQuestions().forEach((q, i) => {
@@ -1761,6 +1868,7 @@
                 name,
                 category,
                 desc: descInput || `自作問題 ${questions.length}問`,
+                passLine: passLineInput,
                 createdAt: (existing && existing.createdAt) || now,
                 updatedAt: now,
                 questions: questions.map(q => ({
@@ -1917,12 +2025,31 @@
             removeRecords('tasks', [taskId]);
         };
 
+        window.toggleTask = function(taskId) {
+            const task = window.appState.tasks.find(t => t.id === taskId);
+            if (!task) return;
+            const completed = !task.completed;
+            updateRecord('tasks', taskId, {
+                ...task,
+                completed,
+                completedAt: completed ? new Date().toISOString() : null
+            });
+        };
+
+        function formatDate(iso) {
+            const d = new Date(iso);
+            return Number.isNaN(d.getTime()) ? '-' : d.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
+        }
+
         function renderTasks() {
             const container = document.getElementById('tasks-list');
             const countEl = document.getElementById('task-count');
-            const tasks = window.appState.tasks;
+            // 未完了を上、完了済みを下に（それぞれ登録順）
+            const tasks = [...window.appState.tasks].sort((a, b) =>
+                (!!a.completed - !!b.completed) || ((Date.parse(a.createdAt) || 0) - (Date.parse(b.createdAt) || 0)));
+            const remaining = tasks.filter(t => !t.completed).length;
 
-            countEl.textContent = `${tasks.length}件`;
+            countEl.textContent = tasks.length === 0 ? '0件' : `残り${remaining}件 / 全${tasks.length}件`;
 
             if (tasks.length === 0) {
                 container.innerHTML = `<div class="text-center py-6 text-slate-400 text-sm">目標タスクはまだありません。上のフォームから追加してください。</div>`;
@@ -1930,12 +2057,14 @@
             }
 
             container.innerHTML = tasks.map(t => `
-                <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-brand-300 transition">
-                    <div class="flex items-center space-x-3">
-                        <i class="fa-solid fa-circle-check text-brand-500 text-lg"></i>
-                        <span class="font-medium text-slate-700 text-sm">${escapeHtml(t.title)}</span>
-                    </div>
-                    <button data-task-id="${escapeHtml(t.id)}" onclick="deleteTask(this.dataset.taskId)" aria-label="目標を削除" class="text-slate-400 hover:text-rose-500 p-1 transition">
+                <div class="flex items-center justify-between p-3.5 border rounded-xl transition ${t.completed ? 'bg-white border-slate-200' : 'bg-slate-50 border-slate-200/80 hover:border-brand-300'}">
+                    <button type="button" data-task-id="${escapeHtml(t.id)}" onclick="toggleTask(this.dataset.taskId)" aria-pressed="${!!t.completed}"
+                        class="flex items-center space-x-3 text-left flex-1 min-w-0" title="${t.completed ? '未完了に戻す' : '達成済みにする'}">
+                        <i class="${t.completed ? 'fa-solid fa-circle-check text-emerald-500' : 'fa-regular fa-circle text-slate-400'} text-lg shrink-0"></i>
+                        <span class="font-medium text-sm truncate ${t.completed ? 'line-through text-slate-400' : 'text-slate-700'}">${escapeHtml(t.title)}</span>
+                        ${t.completed && t.completedAt ? `<span class="text-[11px] text-emerald-600 shrink-0">${escapeHtml(formatDate(t.completedAt))} 達成</span>` : ''}
+                    </button>
+                    <button data-task-id="${escapeHtml(t.id)}" onclick="deleteTask(this.dataset.taskId)" aria-label="目標を削除" class="text-slate-400 hover:text-rose-500 p-1 transition shrink-0">
                         <i class="fa-solid fa-trash-can text-sm"></i>
                     </button>
                 </div>
@@ -1943,6 +2072,9 @@
         }
 
         // --- 演習セッション開始処理 ---
+        const SESSION_MAX_QUESTIONS = 20;   // 1回の演習で出題する最大問題数
+        const DEFAULT_PASS_LINE = 70;       // 合格ラインの既定値（%）
+
         // Fisher–Yates シャッフル（元配列は変更しない）
         function shuffleArray(arr) {
             const a = [...arr];
@@ -1987,7 +2119,7 @@
             if (found && Array.isArray(found.questions) && found.questions.length > 0) {
                 // qid は元の並び順で決めてから、21問以上ある自作検定はランダムに20問を選ぶ
                 const withIds = found.questions.map((q, idx) => ({ ...q, qid: q.qid || `${found.id}-${idx + 1}` }));
-                const picked = withIds.length > 20 ? shuffleArray(withIds).slice(0, 20) : withIds;
+                const picked = withIds.length > SESSION_MAX_QUESTIONS ? shuffleArray(withIds).slice(0, SESSION_MAX_QUESTIONS) : withIds;
                 const formattedQuestions = picked.map(q => ({
                     ...q,
                     title: stripTitlePrefix(q.title),
@@ -1995,7 +2127,11 @@
                     examName: found.name,
                     category: found.category || '教養・学術・その他'
                 }));
-                initExamSession(formattedQuestions, `${found.name} (全${formattedQuestions.length}問)`);
+                initExamSession(formattedQuestions, `${found.name} (全${formattedQuestions.length}問)`, {
+                    groupName: found.name,
+                    passLine: found.passLine,
+                    passNote: found.passNote || ''
+                });
             } else {
                 alert("問題データを読み込めませんでした。");
             }
@@ -2003,20 +2139,20 @@
 
         window.startExam = function(type) {
             if (type === 'latest') {
-                const selected = shuffleArray(buildQuestionPool(MASTER_EXAMS_CATALOG)).slice(0, 20);
-                initExamSession(selected, '全検定ミックス20問総合テスト');
+                const selected = shuffleArray(buildQuestionPool(MASTER_EXAMS_CATALOG)).slice(0, SESSION_MAX_QUESTIONS);
+                initExamSession(selected, `全検定ミックス総合テスト (${selected.length}問)`, { groupName: '全検定ミックス' });
             }
         };
 
         window.startExamByCategory = function() {
             const cat = document.getElementById('mix-category-select').value;
             const exams = MASTER_EXAMS_CATALOG.filter(ex => ex.category === cat);
-            const selected = shuffleArray(buildQuestionPool(exams)).slice(0, 20);
+            const selected = shuffleArray(buildQuestionPool(exams)).slice(0, SESSION_MAX_QUESTIONS);
             if (selected.length === 0) {
                 alert("このカテゴリには問題がありません。");
                 return;
             }
-            initExamSession(selected, `${cat} ミックス${selected.length}問演習`);
+            initExamSession(selected, `${cat} ミックス (${selected.length}問)`, { groupName: `${cat} ミックス` });
         };
 
         // ===== 学習記録・復習機能 =====
@@ -2109,14 +2245,14 @@
                 return;
             }
             // 優先度の高い順に最大20問を選び、出題順はシャッフル
-            const selected = shuffleArray(qids.slice(0, 20).map(qid => index.get(qid)));
-            initExamSession(selected, `${REVIEW_LABELS[kind]} (${selected.length}問)`);
+            const selected = shuffleArray(qids.slice(0, SESSION_MAX_QUESTIONS).map(qid => index.get(qid)));
+            initExamSession(selected, `${REVIEW_LABELS[kind]} (${selected.length}問)`, { groupName: REVIEW_LABELS[kind] });
         };
 
         window.retryLastWrong = function() {
             const qs = window.appState.lastWrongQuestions || [];
             if (qs.length === 0) return;
-            initExamSession(qs, `間違えた問題の解き直し (${qs.length}問)`);
+            initExamSession(qs, `間違えた問題の解き直し (${qs.length}問)`, { groupName: '間違えた問題の解き直し' });
         };
 
         function weaknessRowsHtml(groups) {
@@ -2250,7 +2386,8 @@
             renderAnswerModeToggle();
         };
 
-        function initExamSession(questions, badgeTitle) {
+        // meta: { groupName: 履歴の絞り込みに使う名前, passLine: 合格ライン(%), passNote: 合格ラインの補足 }
+        function initExamSession(questions, badgeTitle, meta = {}) {
             // 正解位置が偏らないよう、出題のたびに選択肢をシャッフル
             window.appState.currentExamQuestions = questions.map(shuffleOptions);
             window.appState.currentQuestionIndex = 0;
@@ -2260,6 +2397,7 @@
             window.appState.elapsedSeconds = 0;
             window.appState.examInProgress = true;
             window.appState.hasResult = false;
+            window.appState.sessionMeta = normalizeSessionMeta(meta, badgeTitle);
             document.getElementById('timer-display').textContent = '00:00';
 
             document.getElementById('exam-badge').textContent = badgeTitle;
@@ -2269,6 +2407,15 @@
             renderCurrentQuestion();
             navigateTo('exam');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function normalizeSessionMeta(meta, badgeTitle) {
+            const pl = Number(meta && meta.passLine);
+            return {
+                groupName: (meta && meta.groupName) || historyGroupName({ title: badgeTitle }),
+                passLine: Number.isFinite(pl) && pl >= 1 && pl <= 100 ? Math.round(pl) : DEFAULT_PASS_LINE,
+                passNote: (meta && meta.passNote) || ''
+            };
         }
 
         function startTimer() {
@@ -2539,6 +2686,9 @@
 
             const resultRecord = {
                 title: document.getElementById('exam-badge').textContent,
+                groupName: window.appState.sessionMeta.groupName,
+                passLine: window.appState.sessionMeta.passLine,
+                passed: accuracyVal >= window.appState.sessionMeta.passLine,
                 score: `${correctCount} / ${total}`,
                 accuracy: accuracyVal,
                 timeSpent: timeStr,
@@ -2569,7 +2719,14 @@
             document.getElementById('res-score').textContent = resultRecord.score;
             document.getElementById('res-accuracy').textContent = `${accuracyVal}%`;
             document.getElementById('res-time').textContent = timeStr;
-            document.getElementById('res-status').textContent = accuracyVal >= 70 ? '合格圏内 🎉' : '復習推奨 📖';
+            const { passLine, passNote } = window.appState.sessionMeta;
+            const needed = Math.max(0, Math.ceil(passLine * total / 100) - correctCount);
+            document.getElementById('res-status').textContent = accuracyVal >= passLine ? '合格ライン到達 🎉' : `あと${needed}問 📖`;
+            document.getElementById('res-passline').textContent =
+                `合格ライン（目安）: 正答率 ${passLine}% 以上` + (passNote ? `　※${passNote}` : '');
+            document.getElementById('res-subtitle').textContent = `全${total}問の回答お疲れ様でした！すべての問題の正誤と解説を以下で確認できます。`;
+            document.getElementById('res-list-title').textContent = `全${total}問の解答と解説一覧`;
+            document.getElementById('res-list-chip').textContent = `全${total}問`;
 
             const expList = document.getElementById('explanations-list');
             expList.innerHTML = questions.map((q, idx) => {
@@ -2624,39 +2781,105 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // 履歴を検定ごとにまとめる名前（古い記録は表示名から推定する）
+        function historyGroupName(item) {
+            if (item.groupName) return item.groupName;
+            return String(item.title || '演習')
+                .replace(/\s*\((全)?\d+問\)$/, '')
+                .replace(/\s*ミックス\d+問演習$/, ' ミックス')
+                .replace(/ミックス\d+問総合テスト$/, 'ミックス')
+                .replace(/^令和\d+年度\s*/, '')
+                .trim() || '演習';
+        }
+
+        function historyAccuracy(item) {
+            return typeof item.accuracy === 'number' ? item.accuracy : (parseInt(item.accuracy, 10) || 0);
+        }
+
+        function historyPassed(item) {
+            return historyAccuracy(item) >= (item.passLine || DEFAULT_PASS_LINE);
+        }
+
+        function getFilteredHistory() {
+            const f = window.appState.historyFilter;
+            return f === 'ALL' ? window.appState.history : window.appState.history.filter(h => historyGroupName(h) === f);
+        }
+
+        function formatDateTime(iso) {
+            const d = new Date(iso);
+            if (Number.isNaN(d.getTime())) return '-';
+            return d.toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+        }
+
+        window.setHistoryFilter = function(value) {
+            window.appState.historyFilter = value || 'ALL';
+            renderHistory();
+        };
+
+        window.deleteHistoryRecord = function(id) {
+            const item = window.appState.history.find(h => h.id === id);
+            if (!item) return;
+            if (!confirm(`${formatDateTime(item.createdAt)} の「${item.title}」の記録を削除しますか？\n問題ごとの正誤（復習・苦手分析）からも除かれます。`)) return;
+            removeRecords('history', [id]);
+        };
+
+        function renderHistoryFilter() {
+            const select = document.getElementById('history-filter');
+            const counts = new Map();
+            window.appState.history.forEach(h => {
+                const g = historyGroupName(h);
+                counts.set(g, (counts.get(g) || 0) + 1);
+            });
+            if (window.appState.historyFilter !== 'ALL' && !counts.has(window.appState.historyFilter)) {
+                window.appState.historyFilter = 'ALL';
+            }
+            const groups = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ja'));
+            select.innerHTML = `<option value="ALL">すべての演習（${window.appState.history.length}回）</option>` +
+                groups.map(([g, n]) => `<option value="${escapeHtml(g)}">${escapeHtml(g)}（${n}回）</option>`).join('');
+            select.value = window.appState.historyFilter;
+        }
+
         function renderHistory() {
             const tbody = document.getElementById('history-table-body');
             // 保存先にかかわらず新しい順に並べる（グラフ・表ともこの順序を前提にする）
-            const history = window.appState.history = sortHistory(window.appState.history);
+            window.appState.history = sortHistory(window.appState.history);
             renderLearningInsights();
+            renderHistoryFilter();
+            const history = getFilteredHistory();
 
             document.getElementById('stat-total-count').textContent = `${history.length} 回`;
-            
+            document.getElementById('stat-pass-count').textContent = `${history.filter(historyPassed).length} 回`;
+
             if (history.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">履歴データがまだありません。演習を実施してください。</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">履歴データがまだありません。演習を実施してください。</td></tr>`;
                 document.getElementById('stat-avg-score').textContent = '0 %';
-                return;
+            } else {
+                const avgAcc = Math.round(history.reduce((sum, h) => sum + historyAccuracy(h), 0) / history.length);
+                document.getElementById('stat-avg-score').textContent = `${avgAcc} %`;
+
+                tbody.innerHTML = history.map(item => {
+                    const accVal = historyAccuracy(item);
+                    return `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3.5 px-6 text-xs text-slate-500 whitespace-nowrap">${escapeHtml(formatDateTime(item.createdAt))}</td>
+                        <td class="py-3.5 px-6 font-semibold text-slate-700 text-xs">${escapeHtml(item.title)}</td>
+                        <td class="py-3.5 px-6 text-center text-xs font-bold text-slate-800 whitespace-nowrap">${escapeHtml(item.score)}</td>
+                        <td class="py-3.5 px-6 text-center">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold ${historyPassed(item) ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}"
+                                title="合格ライン ${escapeHtml(item.passLine || DEFAULT_PASS_LINE)}%">
+                                ${escapeHtml(accVal)}%
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-6 text-right text-xs text-slate-500">${escapeHtml(item.timeSpent || '-')}</td>
+                        <td class="py-3.5 px-4 text-right">
+                            <button type="button" data-history-id="${escapeHtml(item.id)}" onclick="deleteHistoryRecord(this.dataset.historyId)"
+                                class="text-slate-300 hover:text-rose-500 p-1 transition" aria-label="この記録を削除" title="この記録を削除">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `}).join('');
             }
-
-            const validAccuracyItems = history.map(h => typeof h.accuracy === 'number' ? h.accuracy : 0);
-            const avgAcc = Math.round(validAccuracyItems.reduce((acc, curr) => acc + curr, 0) / history.length);
-            document.getElementById('stat-avg-score').textContent = `${avgAcc} %`;
-
-            tbody.innerHTML = history.map(item => {
-                const accVal = typeof item.accuracy === 'number' ? item.accuracy : (parseInt(item.accuracy) || 0);
-                return `
-                <tr class="hover:bg-slate-50/80 transition">
-                    <td class="py-3.5 px-6 text-xs text-slate-500">${escapeHtml(new Date(item.createdAt).toLocaleDateString('ja-JP'))}</td>
-                    <td class="py-3.5 px-6 font-semibold text-slate-700 text-xs">${escapeHtml(item.title)}</td>
-                    <td class="py-3.5 px-6 text-center text-xs font-bold text-slate-800">${escapeHtml(item.score)}</td>
-                    <td class="py-3.5 px-6 text-center">
-                        <span class="px-2.5 py-1 rounded-full text-xs font-bold ${accVal >= 70 ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
-                            ${accVal}%
-                        </span>
-                    </td>
-                    <td class="py-3.5 px-6 text-right text-xs text-slate-500">${escapeHtml(item.timeSpent || '-')}</td>
-                </tr>
-            `}).join('');
 
             if (!document.getElementById('view-history').classList.contains('hidden')) {
                 renderHistoryChart();
@@ -2668,11 +2891,16 @@
             const ctx = document.getElementById('history-chart');
             if (!ctx) return;
 
-            const history = window.appState.history;
-            const recent = history.slice(0, 10).reverse();
+            const recent = getFilteredHistory().slice(0, 10).reverse();
 
-            const labels = recent.map((item, idx) => `回 ${idx + 1}`);
-            const data = recent.map(item => typeof item.accuracy === 'number' ? item.accuracy : (parseInt(item.accuracy) || 0));
+            const labels = recent.map(item => {
+                const d = new Date(item.createdAt);
+                return Number.isNaN(d.getTime()) ? '-' : `${d.getMonth() + 1}/${d.getDate()}`;
+            });
+            const data = recent.map(historyAccuracy);
+            // 検定で絞り込んでいて合格ラインがそろっていれば、合格ラインを点線で重ねる
+            const passLines = [...new Set(recent.map(item => item.passLine || DEFAULT_PASS_LINE))];
+            const showPassLine = window.appState.historyFilter !== 'ALL' && recent.length > 0 && passLines.length === 1;
 
             if (historyChartInstance) {
                 historyChartInstance.destroy();
@@ -2692,7 +2920,15 @@
                         tension: 0.3,
                         pointBackgroundColor: '#2563eb',
                         pointRadius: 5
-                    }]
+                    }].concat(showPassLine ? [{
+                        label: `合格ライン (${passLines[0]}%)`,
+                        data: recent.map(() => passLines[0]),
+                        borderColor: '#10b981',
+                        borderDash: [6, 4],
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: false
+                    }] : [])
                 },
                 options: {
                     responsive: true,
@@ -2707,7 +2943,7 @@
                         }
                     },
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: showPassLine }
                     }
                 }
             });
