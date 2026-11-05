@@ -113,9 +113,9 @@
 
                 <!-- ユーザー状態・同期インジケータ -->
                 <div class="flex items-center space-x-3">
-                    <div id="sync-badge" class="flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="font-medium">20問形式完了</span>
+                    <div id="sync-badge" class="flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs bg-slate-50 text-slate-600 border border-slate-200">
+                        <span class="w-2 h-2 rounded-full bg-slate-400 animate-pulse"></span>
+                        <span class="font-medium">接続中…</span>
                     </div>
                 </div>
             </div>
@@ -457,7 +457,7 @@
                         </div>
                         <div>
                             <h4 class="font-bold text-slate-700 text-sm">Q. 勉強の進捗や成績は保存されますか？</h4>
-                            <p class="text-xs text-slate-500 mt-1">Firebaseバックエンドに学習履歴と成果データが自動保存されます。</p>
+                            <p class="text-xs text-slate-500 mt-1">ログイン不要で、学習目標・履歴・自作検定が Firebase に自動保存されます。クラウドに接続できないときはこのブラウザ内に保存され、右上の表示が「この端末に保存」になります（その場合、ブラウザのデータを消すと失われます）。</p>
                         </div>
                     </div>
 
@@ -512,7 +512,7 @@
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between items-center">
                         <span>バージョン: 3.2.0-20QuestionsAll</span>
-                        <span class="text-emerald-400">Firebase Synchronized</span>
+                        <span class="text-emerald-400">Firebase + ローカル保存</span>
                     </div>
                 </div>
             </section>
@@ -619,27 +619,32 @@
 
     <!-- JavaScript Logic & Master Data (全検定20問完全収録ジェネレーター) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDocs, onSnapshot, query, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+        // Firebase は動的 import で読み込む（CDN に届かなくてもアプリ本体は動かすため）
+        const FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/11.6.1';
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'kentei-exam-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
+        // Web 用の Firebase 設定は公開前提の識別子（秘密鍵ではない）。アクセス制御は Firestore ルールで行う
+        const firebaseConfig = typeof __firebase_config !== 'undefined'
+            ? JSON.parse(__firebase_config)
             : {
-                apiKey: "demo-key",
-                authDomain: "demo.firebaseapp.com",
-                projectId: "demo-app",
-                storageBucket: "demo.appspot.com",
-                messagingSenderId: "123456789",
-                appId: "1:123456789:web:demo"
+                apiKey: "AIzaSyA_B4lEKyuZBuDHxW1_rB45bssqRaKQAWQ",
+                authDomain: "quiz-49883.firebaseapp.com",
+                projectId: "quiz-49883",
+                storageBucket: "quiz-49883.firebasestorage.app",
+                messagingSenderId: "443782194145",
+                appId: "1:443782194145:web:b7e45a5be38fc89b1d28a0"
             };
+        const CLOUD_INIT_TIMEOUT_MS = 10000;
+        const LOCAL_STORAGE_KEY = `quailq:${appId}:data:v1`;
+        const DATA_COLLECTIONS = ['tasks', 'history', 'customExams'];
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
+        let fb = null;          // 読み込んだ Firebase の関数群
+        let auth = null;
+        let db = null;
         let currentUser = null;
+        // 'loading' | 'cloud'（Firestore 同期） | 'local'（この端末の localStorage） | 'memory'（保存不可）
+        let storageMode = 'loading';
+        let snapshotUnsubscribers = [];
+        let pendingWrites = [];  // 保存先が決まる前（接続中）の書き込みを保留する
         let historyChartInstance = null;
 
         // アプリ内グローバル状態
@@ -978,44 +983,210 @@
             }
         ];
 
+        // --- データ保存レイヤー（Firestore / localStorage 切替） ---
+        function sortHistory(list) {
+            return [...list].sort((a, b) => (Date.parse(b.createdAt) || 0) - (Date.parse(a.createdAt) || 0));
+        }
+
+        function sortByCreatedAsc(list) {
+            return [...list].sort((a, b) => (Date.parse(a.createdAt) || 0) - (Date.parse(b.createdAt) || 0));
+        }
+
+        function loadLocalData() {
+            let data = {};
+            try {
+                const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (raw) data = JSON.parse(raw) || {};
+            } catch (e) {
+                console.warn('ローカルデータを読み込めませんでした:', e);
+            }
+            DATA_COLLECTIONS.forEach(name => {
+                window.appState[name] = Array.isArray(data[name]) ? data[name] : [];
+            });
+        }
+
+        function saveLocalData() {
+            try {
+                const data = {};
+                DATA_COLLECTIONS.forEach(name => { data[name] = window.appState[name]; });
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+                return true;
+            } catch (e) {
+                console.warn('ローカルに保存できませんでした:', e);
+                if (storageMode !== 'memory') {
+                    storageMode = 'memory';
+                    updateSyncBadge();
+                }
+                return false;
+            }
+        }
+
+        function renderAllData() {
+            renderTasks();
+            renderHistory();
+            renderExamsGrid();
+        }
+
+        const DATA_RENDERERS = {
+            tasks: () => renderTasks(),
+            history: () => renderHistory(),
+            customExams: () => renderExamsGrid()
+        };
+
+        function updateSyncBadge() {
+            const badge = document.getElementById('sync-badge');
+            if (!badge) return;
+            const states = {
+                loading: ['bg-slate-50 text-slate-600 border-slate-200', 'bg-slate-400 animate-pulse', '接続中…', 'クラウドに接続しています'],
+                cloud:   ['bg-emerald-50 text-emerald-700 border-emerald-200', 'bg-emerald-500', 'クラウド同期中', '学習データは Firebase に保存されています'],
+                local:   ['bg-amber-50 text-amber-700 border-amber-200', 'bg-amber-500', 'この端末に保存', 'クラウドに接続できないため、このブラウザに保存しています'],
+                memory:  ['bg-rose-50 text-rose-700 border-rose-200', 'bg-rose-500', '一時保存のみ', 'ブラウザの保存領域が使えないため、再読み込みするとデータが消えます']
+            };
+            const [boxCls, dotCls, label, tip] = states[storageMode] || states.loading;
+            badge.className = `flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs border ${boxCls}`;
+            badge.title = tip;
+            badge.innerHTML = `<span class="w-2 h-2 rounded-full ${dotCls}"></span><span class="font-medium">${label}</span>`;
+        }
+
+        function switchToLocalMode(reason) {
+            if (storageMode === 'local' || storageMode === 'memory') return;
+            console.warn('ローカル保存モードに切り替えます:', reason);
+            snapshotUnsubscribers.forEach(unsub => { try { unsub(); } catch (_) {} });
+            snapshotUnsubscribers = [];
+            storageMode = 'local';
+            loadLocalData();
+            renderAllData();
+            updateSyncBadge();
+            flushPendingWrites();
+        }
+
+        function flushPendingWrites() {
+            const queued = pendingWrites;
+            pendingWrites = [];
+            queued.forEach(fn => fn());
+        }
+
+        function isCloudActive() {
+            return storageMode === 'cloud' && currentUser && fb;
+        }
+
+        function userCollection(name) {
+            return fb.collection(db, 'artifacts', appId, 'users', currentUser.uid, name);
+        }
+
+        function addRecordLocally(name, data) {
+            const record = { id: `local_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, ...data };
+            window.appState[name] = [...window.appState[name], record];
+            saveLocalData();
+            DATA_RENDERERS[name]();
+        }
+
+        // Firestore への書き込みは await しない（オフライン時もローカルキャッシュ経由で即座に画面へ反映される）
+        function addRecord(name, data) {
+            if (storageMode === 'loading') {
+                pendingWrites.push(() => addRecord(name, data));
+                return;
+            }
+            if (isCloudActive()) {
+                fb.addDoc(userCollection(name), data).catch(err => {
+                    switchToLocalMode(err);
+                    addRecordLocally(name, data);
+                });
+                return;
+            }
+            addRecordLocally(name, data);
+        }
+
+        function removeRecords(name, ids) {
+            if (ids.length === 0) return;
+            if (storageMode === 'loading') {
+                pendingWrites.push(() => removeRecords(name, ids));
+                return;
+            }
+            if (isCloudActive()) {
+                ids.forEach(id => {
+                    fb.deleteDoc(fb.doc(db, 'artifacts', appId, 'users', currentUser.uid, name, id))
+                        .catch(err => console.error(`${name} の削除に失敗しました:`, err));
+                });
+                return;
+            }
+            const idSet = new Set(ids);
+            window.appState[name] = window.appState[name].filter(item => !idSet.has(item.id));
+            saveLocalData();
+            DATA_RENDERERS[name]();
+        }
+
+        function withTimeout(promise, ms) {
+            return Promise.race([
+                promise,
+                new Promise((_, reject) => setTimeout(() => reject(new Error(`timeout after ${ms}ms`)), ms))
+            ]);
+        }
+
         // Auth ＆ 初期化処理
         async function initAuthAndData() {
+            updateSyncBadge();
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                await withTimeout((async () => {
+                    const [appMod, authMod, fsMod] = await Promise.all([
+                        import(`${FIREBASE_SDK}/firebase-app.js`),
+                        import(`${FIREBASE_SDK}/firebase-auth.js`),
+                        import(`${FIREBASE_SDK}/firebase-firestore.js`)
+                    ]);
+                    fb = { ...appMod, ...authMod, ...fsMod };
+                    const firebaseApp = fb.initializeApp(firebaseConfig);
+                    auth = fb.getAuth(firebaseApp);
+                    try {
+                        // オフライン中の書き込みもリロード後に残るよう IndexedDB キャッシュを使う
+                        db = fb.initializeFirestore(firebaseApp, {
+                            localCache: fb.persistentLocalCache({ tabManager: fb.persistentMultipleTabManager() })
+                        });
+                    } catch (e) {
+                        console.warn('永続キャッシュを使えないため通常モードで接続します:', e);
+                        db = fb.getFirestore(firebaseApp);
+                    }
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await fb.signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await fb.signInAnonymously(auth);
+                    }
+                })(), CLOUD_INIT_TIMEOUT_MS);
             } catch (e) {
-                console.warn("Auth initialization fallback:", e);
+                switchToLocalMode(e);
+                return;
             }
 
-            onAuthStateChanged(auth, (user) => {
+            fb.onAuthStateChanged(auth, (user) => {
+                if (storageMode === 'local' || storageMode === 'memory') return;
                 currentUser = user;
                 if (user) {
-                    setupRealtimeListeners(user.uid);
+                    storageMode = 'cloud';
+                    updateSyncBadge();
+                    setupRealtimeListeners();
+                    flushPendingWrites();
+                } else {
+                    switchToLocalMode('サインインしていません');
                 }
             });
         }
 
-        function setupRealtimeListeners(uid) {
-            const tasksCol = collection(db, 'artifacts', appId, 'users', uid, 'tasks');
-            onSnapshot(tasksCol, (snapshot) => {
-                window.appState.tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderTasks();
-            }, (error) => console.error("Tasks snapshot error:", error));
-
-            const historyCol = collection(db, 'artifacts', appId, 'users', uid, 'history');
-            onSnapshot(historyCol, (snapshot) => {
-                window.appState.history = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderHistory();
-            }, (error) => console.error("History snapshot error:", error));
-
-            const customExamsCol = collection(db, 'artifacts', appId, 'users', uid, 'customExams');
-            onSnapshot(customExamsCol, (snapshot) => {
-                window.appState.customExams = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderExamsGrid();
-            }, (error) => console.error("Custom exams snapshot error:", error));
+        function setupRealtimeListeners() {
+            snapshotUnsubscribers.forEach(unsub => unsub());
+            const listen = (name, transform) => fb.onSnapshot(
+                userCollection(name),
+                (snapshot) => {
+                    // doc.id を最後に置き、データ内の id で上書きされないようにする
+                    const items = snapshot.docs.map(d => ({ ...d.data(), id: d.id }));
+                    window.appState[name] = transform ? transform(items) : items;
+                    DATA_RENDERERS[name]();
+                },
+                (error) => switchToLocalMode(error)
+            );
+            snapshotUnsubscribers = [
+                listen('tasks', sortByCreatedAsc),
+                listen('history', sortHistory),
+                listen('customExams', sortByCreatedAsc)
+            ];
         }
 
         window.addEventListener('load', () => {
@@ -1191,17 +1362,7 @@
                 questions: questions
             };
 
-            if (currentUser) {
-                try {
-                    const customCol = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'customExams');
-                    await addDoc(customCol, newCustomExam);
-                } catch (err) {
-                    console.error("Custom exam save error:", err);
-                }
-            } else {
-                window.appState.customExams.push(newCustomExam);
-                renderExamsGrid();
-            }
+            addRecord('customExams', newCustomExam);
 
             closeCustomExamModal();
             showModal("検定追加完了", `「${examTitle}」(20問セット)を検定一覧に追加しました！`);
@@ -1217,32 +1378,12 @@
 
             const newTask = { title, createdAt: new Date().toISOString(), completed: false };
 
-            if (currentUser) {
-                try {
-                    const tasksCol = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'tasks');
-                    await addDoc(tasksCol, newTask);
-                } catch (err) {
-                    console.error("Task add error:", err);
-                }
-            } else {
-                window.appState.tasks.push({ id: Date.now().toString(), ...newTask });
-                renderTasks();
-            }
+            addRecord('tasks', newTask);
             input.value = '';
         };
 
-        window.deleteTask = async function(taskId) {
-            if (currentUser) {
-                try {
-                    const taskRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'tasks', taskId);
-                    await deleteDoc(taskRef);
-                } catch (err) {
-                    console.error("Task delete error:", err);
-                }
-            } else {
-                window.appState.tasks = window.appState.tasks.filter(t => t.id !== taskId);
-                renderTasks();
-            }
+        window.deleteTask = function(taskId) {
+            removeRecords('tasks', [taskId]);
         };
 
         function renderTasks() {
@@ -1559,16 +1700,8 @@
                 createdAt: new Date().toISOString()
             };
 
-            if (currentUser) {
-                try {
-                    const historyCol = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'history');
-                    await addDoc(historyCol, resultRecord);
-                } catch (e) {
-                    console.error("Save history error:", e);
-                }
-            } else {
-                window.appState.history.unshift(resultRecord);
-            }
+            // 保存（ローカル時も renderHistory まで行われ、履歴・統計がすぐ更新される）
+            addRecord('history', resultRecord);
 
             document.getElementById('res-score').textContent = resultRecord.score;
             document.getElementById('res-accuracy').textContent = `${accuracyVal}%`;
@@ -1626,7 +1759,8 @@
 
         function renderHistory() {
             const tbody = document.getElementById('history-table-body');
-            const history = window.appState.history;
+            // 保存先にかかわらず新しい順に並べる（グラフ・表ともこの順序を前提にする）
+            const history = window.appState.history = sortHistory(window.appState.history);
 
             document.getElementById('stat-total-count').textContent = `${history.length} 回`;
             
@@ -1714,19 +1848,7 @@
         window.clearHistoryData = async function() {
             if (!confirm("すべての受検履歴をクリアしますか？")) return;
 
-            if (currentUser) {
-                try {
-                    const historyCol = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'history');
-                    const snapshot = await getDocs(historyCol);
-                    const deletePromises = snapshot.docs.map(d => deleteDoc(d.ref));
-                    await Promise.all(deletePromises);
-                } catch (e) {
-                    console.error("Clear history error:", e);
-                }
-            } else {
-                window.appState.history = [];
-                renderHistory();
-            }
+            removeRecords('history', window.appState.history.map(h => h.id));
 
             showModal("履歴クリア", "受検履歴を初期化しました。");
         };
