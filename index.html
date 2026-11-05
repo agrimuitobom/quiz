@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuailQ - 総合検定・練習問題＆学習プラットフォーム</title>
+    <title>QuoliQ - 総合検定・練習問題＆学習プラットフォーム</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -57,7 +57,7 @@
                     ALL EXAMS
                 </div>
             </div>
-            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">QuailQ</h1>
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">QuoliQ</h1>
             <p class="text-blue-200 text-sm sm:text-base max-w-xs mx-auto mb-8 font-light">
                 あらゆる検定・資格に対応！<br>各検定20問のオリジナル練習問題で学習
             </p>
@@ -82,7 +82,7 @@
                         <i class="fa-solid fa-graduation-cap text-lg"></i>
                     </div>
                     <div>
-                        <span class="text-lg font-bold bg-gradient-to-r from-brand-700 to-indigo-700 bg-clip-text text-transparent">QuailQ</span>
+                        <span class="text-lg font-bold bg-gradient-to-r from-brand-700 to-indigo-700 bg-clip-text text-transparent">QuoliQ</span>
                         <span class="block text-[10px] text-slate-400 font-medium -mt-1">ALL EXAMS PLATFORM</span>
                     </div>
                 </div>
@@ -584,7 +584,7 @@
                     <div>
                         <div class="flex items-center space-x-2 text-amber-400 text-xs font-bold mb-2">
                             <i class="fa-brands fa-github text-lg"></i>
-                            <span>QuailQ Architecture</span>
+                            <span>QuoliQ Architecture</span>
                         </div>
                         <h3 class="text-lg font-bold mb-2">全検定 20問統一版プラットフォーム</h3>
                         <p class="text-slate-300 text-xs leading-relaxed mb-4">
@@ -621,7 +621,7 @@
         </div>
 
         <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-            <p>© 2026 QuailQ - 総合検定・資格学習プラットフォーム (各検定20問収録)</p>
+            <p>© 2026 QuoliQ - 総合検定・資格学習プラットフォーム (各検定20問収録)</p>
         </footer>
     </div>
 
@@ -725,6 +725,7 @@
                 appId: "1:443782194145:web:b7e45a5be38fc89b1d28a0"
             };
         const CLOUD_INIT_TIMEOUT_MS = 10000;
+        // 保存キーの接頭辞 quailq: は旧アプリ名の名残。変えると保存済みの学習データ・中断中の演習が読めなくなるため据え置く
         const LOCAL_STORAGE_KEY = `quailq:${appId}:data:v1`;
         const DATA_COLLECTIONS = ['tasks', 'history', 'customExams', 'bookmarks'];
 
