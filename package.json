@@ -1,0 +1,13 @@
+{
+  "name": "qualiq",
+  "version": "4.0.0",
+  "private": true,
+  "description": "QualiQ - 資格・検定の練習問題で学習する Web アプリ",
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i src/tailwind.css -o css/tailwind.css --minify",
+    "watch:css": "tailwindcss -c tailwind.config.js -i src/tailwind.css -o css/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}
