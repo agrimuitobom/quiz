@@ -1,0 +1,25 @@
+name: Tailwind CSS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check-built-css:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build:css
+      - name: css/tailwind.css が最新か確認
+        run: |
+          if ! git diff --quiet -- css/tailwind.css; then
+            echo "::error::css/tailwind.css が古くなっています。npm run build:css を実行してコミットしてください。"
+            git diff --stat -- css/tailwind.css
+            exit 1
+          fi

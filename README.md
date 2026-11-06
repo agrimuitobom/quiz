@@ -17,7 +17,20 @@
 
 ## 使い方
 
-`index.html` をブラウザで開くか、GitHub Pages などの静的ホスティングで公開します。
+リポジトリのファイルをそのまま GitHub Pages などの静的ホスティングで公開します。`index.html` をブラウザで直接開いても動きます。
+
+## ファイル構成
+
+| ファイル | 内容 |
+|---|---|
+| `index.html` | 画面の HTML |
+| `js/data/exams.js` | 収録検定と問題データ（問題の追加・修正はここ） |
+| `js/app.js` | アプリ本体（保存、演習、復習、自作検定など） |
+| `js/theme-init.js` | 画面描画前にダークモードを適用する小さなスクリプト |
+| `css/tailwind.css` | Tailwind CSS の生成物（**直接編集しない**） |
+| `css/app.css` | 独自のスタイル（ダークモードなど） |
+| `src/tailwind.css` / `tailwind.config.js` | Tailwind の入力ファイルと設定 |
+| `firestore.rules` | Firestore のセキュリティルール |
 
 ## データの保存先
 
@@ -64,4 +77,15 @@ JSON：
 
 - 収録問題の ID は「検定ID-番号」（例：`itpass-3`）で、並び順から決まります。学習記録はこの ID に結び付くため、問題を追加するときは各セットの**末尾**に追加してください。
 - ブラウザに保存するデータのキーは、旧名の名残で `quailq:` から始まります。変えると保存済みのデータが読めなくなるため、そのままにしています。
-- 外部ライブラリは CDN から読み込んでいます。Chart.js・Font Awesome・Firebase はバージョンを固定しています。Tailwind CSS は Play CDN（開発向け）のままなので、本番運用ではビルド済み CSS への置き換えを推奨します。
+- 外部ライブラリ（Chart.js・Font Awesome・Firebase）は CDN から、バージョンを固定して読み込んでいます。
+
+### CSS の再生成
+
+`index.html` や `js/` の中で Tailwind のクラスを追加・変更したら、CSS を作り直してコミットしてください（Node.js 18 以上が必要です）。
+
+```bash
+npm install
+npm run build:css
+```
+
+開発中は `npm run watch:css` で、ファイルを保存するたびに自動で再生成できます。GitHub Actions が、`css/tailwind.css` が最新かどうかをプルリクエストごとに確認します。

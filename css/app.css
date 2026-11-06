@@ -1,0 +1,57 @@
+/* QualiQ 独自のスタイル（Tailwind の生成 CSS の後に読み込む） */
+
+/* 現在の画面のナビゲーションを強調 */
+[data-nav][aria-current="page"] { color: #2563eb !important; }
+header [data-nav][aria-current="page"] { background-color: #eff6ff; }
+html.dark [data-nav][aria-current="page"] { color: #60a5fa !important; }
+html.dark header [data-nav][aria-current="page"] { background-color: rgba(37, 99, 235, 0.18); }
+
+/* ===== ダークモード（Tailwind のクラスを上書き。html.dark で詳細度を上げる） ===== */
+html.dark { color-scheme: dark; }
+html.dark, html.dark body, html.dark .bg-slate-50 { background-color: #0b1120; }
+html.dark .bg-white, html.dark .hover\:bg-white:hover { background-color: #111827; }
+html.dark .bg-white\/95 { background-color: rgba(17, 24, 39, 0.95); }
+html.dark .bg-slate-50\/60, html.dark .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-50\/80:hover { background-color: #0f172a; }
+html.dark .bg-slate-100, html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover,
+html.dark .disabled\:bg-slate-200:disabled { background-color: #1e293b; }
+html.dark .disabled\:bg-slate-300:disabled { background-color: #334155; }
+html.dark .text-slate-800 { color: #e2e8f0; }
+html.dark .text-slate-700 { color: #cbd5e1; }
+html.dark .text-slate-600, html.dark .text-slate-500 { color: #94a3b8; }
+html.dark .text-slate-300 { color: #475569; }
+html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-200\/80,
+html.dark .hover\:border-slate-200:hover { border-color: #1f2937; }
+html.dark .border-slate-300, html.dark .hover\:border-slate-300:hover { border-color: #334155; }
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1f2937; }
+html.dark .bg-brand-50, html.dark .bg-brand-50\/90, html.dark .hover\:bg-brand-50\/50:hover { background-color: rgba(37, 99, 235, 0.15); }
+html.dark .bg-brand-100, html.dark .group:hover .group-hover\:bg-brand-100 { background-color: rgba(37, 99, 235, 0.28); }
+html.dark .text-brand-600, html.dark .hover\:text-brand-600:hover, html.dark .group:hover .group-hover\:text-brand-600 { color: #60a5fa; }
+html.dark .text-brand-700, html.dark .text-brand-900 { color: #93c5fd; }
+html.dark .border-brand-300, html.dark .hover\:border-brand-300:hover { border-color: rgba(96, 165, 250, 0.5); }
+html.dark .bg-emerald-50, html.dark .bg-emerald-50\/50 { background-color: rgba(16, 185, 129, 0.12); }
+html.dark .bg-emerald-100 { background-color: rgba(16, 185, 129, 0.22); }
+html.dark .text-emerald-700, html.dark .text-emerald-800, html.dark .text-emerald-900 { color: #6ee7b7; }
+html.dark .border-emerald-200, html.dark .border-emerald-300 { border-color: rgba(16, 185, 129, 0.4); }
+html.dark .bg-rose-50, html.dark .bg-rose-50\/50, html.dark .hover\:bg-rose-50\/50:hover { background-color: rgba(244, 63, 94, 0.12); }
+html.dark .bg-rose-100 { background-color: rgba(244, 63, 94, 0.22); }
+html.dark .text-rose-700, html.dark .text-rose-800, html.dark .text-rose-900 { color: #fda4af; }
+html.dark .border-rose-200, html.dark .border-rose-300, html.dark .hover\:border-rose-300:hover { border-color: rgba(244, 63, 94, 0.4); }
+html.dark .bg-amber-50, html.dark .bg-amber-50\/40, html.dark .hover\:bg-amber-50:hover,
+html.dark .hover\:bg-amber-50\/50:hover, html.dark .hover\:bg-amber-100:hover { background-color: rgba(245, 158, 11, 0.12); }
+html.dark .bg-amber-100 { background-color: rgba(245, 158, 11, 0.22); }
+html.dark .text-amber-700, html.dark .text-amber-800, html.dark .text-amber-900 { color: #fcd34d; }
+html.dark .border-amber-200, html.dark .border-amber-300, html.dark .hover\:border-amber-300:hover { border-color: rgba(245, 158, 11, 0.4); }
+html.dark input, html.dark textarea, html.dark select { background-color: #0f172a; color: #e2e8f0; }
+html.dark kbd { background-color: #1e293b; border-color: #334155; }
+
+.fade-in { animation: fadeIn 0.3s ease-in-out forwards; }
+.fade-out { animation: fadeOut 0.3s ease-in-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-6px); } }
+.glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+
+/* ダークモードでも黄色ボタン上の文字は濃い色のままにする */
+html.dark .bg-amber-400.text-brand-900,
+html.dark .bg-amber-400 .text-brand-900 { color: #1e3a8a; }
+/* ロゴ文字のグラデーションを暗い背景でも読める明るさにする */
+html.dark .logo-text { background-image: linear-gradient(to right, #93c5fd, #a5b4fc); }
