@@ -557,13 +557,64 @@
         renderExamsGrid();
     };
 
+    // ===== 級・区分のある検定（漢検・測量・農業技術検定など）を1枚のカードにまとめる =====
+    const LEVEL_KEY_PREFIX = 'quailq:exam-level:';
+
+    function getSelectedLevelId(group, levels) {
+        let saved = null;
+        try { saved = localStorage.getItem(LEVEL_KEY_PREFIX + group); } catch (_) { /* 保存できない環境では先頭の級 */ }
+        return levels.some(l => l.id === saved) ? saved : levels[0].id;
+    }
+
+    window.setExamLevel = function(group, levelId) {
+        try { localStorage.setItem(LEVEL_KEY_PREFIX + group, levelId); } catch (_) {}
+        renderExamsGrid();
+        const select = document.getElementById(`level-${group}`);
+        if (select) select.focus();
+    };
+
+    // 収録検定をカード単位に並べる。group を持つ検定はまとめて、選択中の級をカードの中身にする
+    function buildCatalogCards() {
+        const cards = [];
+        const groups = new Map();
+        MASTER_EXAMS_CATALOG.forEach(ex => {
+            if (!ex.group) {
+                cards.push(ex);
+                return;
+            }
+            if (!groups.has(ex.group)) {
+                const card = { isGroup: true, group: ex.group, levels: [] };
+                groups.set(ex.group, card);
+                cards.push(card);
+            }
+            groups.get(ex.group).levels.push(ex);
+        });
+        groups.forEach(card => {
+            const first = card.levels[0];
+            const selected = card.levels.find(l => l.id === getSelectedLevelId(card.group, card.levels));
+            const counts = [...new Set(card.levels.map(l => l.questions.length))];
+            Object.assign(card, {
+                id: selected.id,
+                selected,
+                name: first.groupName,
+                levelName: first.levelName || '級',
+                category: first.category,
+                icon: first.icon,
+                desc: first.groupDesc,
+                badge: `${card.levels.length}${first.levelName || '級'}` + (counts.length === 1 ? `・各${counts[0]}問` : ''),
+                questions: selected.questions
+            });
+        });
+        return cards;
+    }
+
     function renderExamsGrid() {
         const grid = document.getElementById('exams-grid');
         const catFilter = window.appState.activeCategory;
         const queryStr = window.appState.searchQuery;
 
         let allExams = [
-            ...MASTER_EXAMS_CATALOG,
+            ...buildCatalogCards(),
             ...window.appState.customExams.map(ce => ({
                 id: ce.id,
                 name: ce.name,
@@ -585,10 +636,9 @@
             }
 
             if (queryStr) {
-                const matchName = exam.name.toLowerCase().includes(queryStr);
-                const matchDesc = exam.desc.toLowerCase().includes(queryStr);
-                const matchCat = exam.category.toLowerCase().includes(queryStr);
-                return matchName || matchDesc || matchCat;
+                const texts = [exam.name, exam.desc, exam.category,
+                    ...(exam.levels || []).flatMap(l => [l.name, l.desc, l.levelLabel])];
+                return texts.some(t => String(t || '').toLowerCase().includes(queryStr));
             }
 
             return true;
@@ -630,9 +680,18 @@
                     </div>
                     <h4 class="font-bold text-slate-800 text-base group-hover:text-brand-600 transition mb-1">
                         <button type="button" data-exam-id="${escapeHtml(exam.id)}" onclick="startExamById(this.dataset.examId)" class="text-left focus:outline-none"
-                            aria-label="${escapeHtml(exam.name)}の演習を開始（${Math.min(exam.questions.length, SESSION_MAX_QUESTIONS)}問）">${escapeHtml(exam.name)}</button>
+                            aria-label="${escapeHtml(exam.isGroup ? `${exam.name} ${exam.selected.levelLabel}` : exam.name)}の演習を開始（${Math.min(exam.questions.length, SESSION_MAX_QUESTIONS)}問）">${escapeHtml(exam.name)}</button>
                     </h4>
                     <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-4">${escapeHtml(exam.desc)}</p>
+                    ${exam.isGroup ? `
+                    <div class="mb-2 flex items-center gap-2">
+                        <label for="level-${escapeHtml(exam.group)}" class="text-xs font-bold text-slate-500 shrink-0">${escapeHtml(exam.levelName)}</label>
+                        <select id="level-${escapeHtml(exam.group)}" data-group="${escapeHtml(exam.group)}" onchange="setExamLevel(this.dataset.group, this.value)"
+                            class="flex-1 min-w-0 px-3 py-1.5 border border-slate-300 rounded-lg text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            ${exam.levels.map(l => `<option value="${escapeHtml(l.id)}" ${l.id === exam.selected.id ? 'selected' : ''}>${escapeHtml(l.levelLabel)}</option>`).join('')}
+                        </select>
+                    </div>
+                    <p class="text-[11px] text-slate-500 leading-relaxed mb-4">${escapeHtml(exam.selected.desc)}</p>` : ''}
                 </div>
                 <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs font-semibold text-slate-400 group-hover:text-brand-600">
                     <span>${escapeHtml(exam.questions.length)}問 収録</span>
@@ -647,7 +706,7 @@
 
     // カードのどこをクリックしても開始する（カード内のボタンはそれぞれの動作を優先）
     window.onExamCardClick = function(e, examId) {
-        if (e.target.closest('button')) return;
+        if (e.target.closest('button, select, label, option')) return;
         startExamById(examId);
     };
 
@@ -1826,7 +1885,8 @@
     // --- 成績グラフ描画 & 履歴クリア ---
     function renderHistoryChart() {
         const ctx = document.getElementById('history-chart');
-        if (!ctx) return;
+        // Chart.js を読み込めなかった（オフラインなど）場合はグラフだけ省略する
+        if (!ctx || typeof window.Chart !== 'function') return;
 
         const recent = getFilteredHistory().slice(0, 10).reverse();
 
