@@ -29,28 +29,99 @@
         { title: "【ITパスポート 問20】ソーシャルエンジニアリングに該当する行いはどれか。", options: ["サーバーへの大量アクセス攻撃", "管理者の肩越しにパスワード入力画面を盗み見る", "SQL文を悪用してDBを改ざんする", "無線LANの暗号化キーを解読する"], correctIndex: 1, explanation: "人間の心理的隙や物理的な行動（盗み見、ゴミ箱の漁り等）を利用してパスワードなどを得る手法です。" }
     ];
 
-    const EIKEN_QUESTIONS = [
-        { title: "【英検 問1】The company announced that it will _______ a new office in Tokyo next month.", options: ["establish", "disappear", "refuse", "prevent"], correctIndex: 0, explanation: "establish（設立する・立ち上げる）が文脈上最も適切です。" },
-        { title: "【英検 問2】She managed to pass the exam _______ her lack of preparation time.", options: ["despite", "because", "although", "unless"], correctIndex: 0, explanation: "despite + 名詞（〜にもかかわらず）が文法的に正解です。" },
-        { title: "【英検 問3】Please make sure to submit your final report _______ Friday at 5 PM.", options: ["by", "until", "for", "during"], correctIndex: 0, explanation: "「〜までに（期限）」を表す前置詞は「by」です。" },
-        { title: "【英検 問4】The new policy is expected to have a positive _______ on employee performance.", options: ["effect", "affect", "effective", "affection"], correctIndex: 0, explanation: "「効果・影響（名詞）」は effect です。" },
-        { title: "【英検 問5】He is looking forward to _______ his grandparents during the summer break.", options: ["visiting", "visit", "visited", "visits"], correctIndex: 0, explanation: "look forward to + 動名詞 (-ing) の構文です。" },
-        { title: "【英検 問6】The weather was so bad that the flight was _______ until tomorrow.", options: ["delayed", "decided", "described", "destroyed"], correctIndex: 0, explanation: "delayed（遅延された、延期された）が文脈に適合します。" },
-        { title: "【英検 問7】Could you please _______ me a hand with these heavy boxes?", options: ["give", "make", "take", "do"], correctIndex: 0, explanation: "give someone a hand（人に手を貸す・手伝う）の熟語です。" },
-        { title: "【英検 問8】If I _______ enough money, I would buy a new laptop right now.", options: ["had", "have", "will have", "am having"], correctIndex: 0, explanation: "仮定法過去の文節（If S + 過去形...）です。" },
-        { title: "【英検 問9】The museum is famous _______ its collection of impressionist paintings.", options: ["for", "at", "with", "in"], correctIndex: 0, explanation: "be famous for 〜（〜で有名である）のイディオムです。" },
-        { title: "【英検 問10】Neither the manager nor the staff members _______ aware of the schedule change.", options: ["were", "was", "is", "be"], correctIndex: 0, explanation: "Neither A nor B では B（the staff members: 複数形）に動詞を一致させます。" },
-        { title: "【英検 問11】He spoke so fast that it was difficult to _______ what he was saying.", options: ["understand", "remember", "forget", "realize"], correctIndex: 0, explanation: "understand（理解する）が文意に合致した正答です。" },
-        { title: "【英検 問12】The conference was postponed _______ the sudden illness of the key speaker.", options: ["due to", "in order to", "so as to", "instead of"], correctIndex: 0, explanation: "due to + 名詞（〜が理由で、〜のために）の表現です。" },
-        { title: "【英検 問13】She has been working for this international bank _______ 2018.", options: ["since", "for", "from", "during"], correctIndex: 0, explanation: "現在完了形とともに「〜以来ずっと（起点）」を示すのは since です。" },
-        { title: "【英検 問14】You had better _______ your homework before watching TV.", options: ["finish", "finishing", "to finish", "finished"], correctIndex: 0, explanation: "had better + 動詞の原形（〜したほうがよい）となります。" },
-        { title: "【英検 問15】This smartphone is superior _______ the old model in many aspects.", options: ["to", "than", "over", "with"], correctIndex: 0, explanation: "be superior to 〜（〜より優れている）。superior などラテン語由来の比較の形容詞は than ではなく to を使います。" },
-        { title: "【英検 問16】He admitted _______ the mistake during the meeting yesterday.", options: ["making", "to make", "make", "made"], correctIndex: 0, explanation: "admit + 動名詞 (-ing) で「〜したことを認める」となります。" },
-        { title: "【英検 問17】The traffic was very heavy; _______, we arrived at the airport on time.", options: ["nevertheless", "therefore", "otherwise", "besides"], correctIndex: 0, explanation: "nevertheless（それにもかかわらず、逆説）が文脈上正解です。" },
-        { title: "【英検 問18】The instructions were so _______ that everyone got confused.", options: ["confusing", "confused", "confidence", "confidant"], correctIndex: 0, explanation: "指示（事象）が「困惑させるような」状態なので confusing が適切です。" },
-        { title: "【英検 問19】It is vital that all safety rules _______ followed strictly.", options: ["be", "are", "were", "being"], correctIndex: 0, explanation: "vital などの形容詞に続く that 節内では (should) + 動詞原形が用いられます。" },
-        { title: "【英検 問20】I would rather stay home _______ go out in this storm.", options: ["than", "to", "instead", "or"], correctIndex: 0, explanation: "would rather A than B（BするよりむしろAしたい）の構文です。" }
-    ];
+    // ===== 実用英語技能検定（級別） =====
+    // 各級の出題範囲（語彙・文法・会話）を参考にしたオリジナル問題（級の割り当ては目安）
+    const EIKEN4_QUESTIONS = buildSet('英検4級', [
+        ["My sister (    ) tennis every Sunday.", ["plays", "play", "playing", "to play"], "主語が3人称単数（My sister）で現在の習慣を表すので、動詞に -s を付けて plays にします。"],
+        ["A: (    ) you help me with my homework?  B: Sure.", ["Can", "Are", "Is", "Have"], "「〜してくれますか」と依頼するときは Can you 〜? を使います。"],
+        ["I was (    ) a bath when you called me.", ["taking", "take", "took", "takes"], "過去のある時点に「〜していた」は過去進行形（was + -ing）です。"],
+        ["This bag is (    ) than that one.", ["bigger", "big", "biggest", "more big"], "than があるので比較級にします。big の比較級は g を重ねて bigger です。"],
+        ["Tom went to the library (    ) some books.", ["to borrow", "borrow", "borrowed", "borrows"], "「〜するために」と目的を表すのは to 不定詞（to + 動詞の原形）です。"],
+        ["A: Whose umbrella is this?  B: It's (    ).", ["mine", "my", "me", "I"], "「私のもの」は所有代名詞 mine です。"],
+        ["We (    ) to Kyoto last summer.", ["went", "go", "goes", "going"], "last summer（去年の夏）とあるので過去形 went にします。"],
+        ["There (    ) many students in the gym.", ["are", "is", "be", "was"], "many students（複数）なので There are 〜 を使います。"],
+        ["A: How (    ) does it take to get to the station?  B: About ten minutes.", ["long", "many", "much", "old"], "かかる時間をたずねるときは How long does it take 〜? を使います。"],
+        ["My father is good at (    ).", ["cooking", "cook", "cooks", "to cooking"], "前置詞 at の後ろには動名詞（-ing）を置きます。be good at 〜ing で「〜するのが得意だ」。"],
+        ["Please be quiet. The baby is (    ).", ["sleeping", "sleep", "slept", "sleeps"], "「今〜している」は現在進行形（be + -ing）です。"],
+        ["I have to (    ) up early tomorrow.", ["get", "gets", "got", "getting"], "have to の後ろは動詞の原形です。"],
+        ["Ken is the (    ) runner in his class.", ["fastest", "faster", "fast", "most fast"], "the と in his class（クラスの中で）があるので最上級 fastest にします。"],
+        ["A: (    ) is your birthday?  B: It's May 5th.", ["When", "Where", "Who", "Which"], "日付をたずねているので When を使います。"],
+        ["She will (    ) her grandmother next week.", ["visit", "visits", "visited", "visiting"], "助動詞 will の後ろは動詞の原形です。"],
+        ["A (    ) is a place where you can borrow books.", ["library", "hospital", "station", "bakery"], "本を借りられる場所は library（図書館）です。"],
+        ["My brother can speak English very (    ).", ["well", "good", "kind", "much"], "動詞 speak を説明するのは副詞 well（上手に）です。good は形容詞です。"],
+        ["A: Shall we go shopping?  B: (    )", ["Yes, let's.", "No, I'm not.", "Yes, I do.", "It's mine."], "Shall we 〜?（〜しましょうか）への返事は Yes, let's. / No, let's not. です。"],
+        ["I'm hungry. I didn't eat (    ) this morning.", ["anything", "something", "nothing", "many"], "否定文で「何も〜ない」は not 〜 anything を使います。"],
+        ["The museum (    ) at nine every morning.", ["opens", "open", "opening", "to open"], "主語 The museum は3人称単数で、毎朝の決まった事柄なので現在形 opens です。"]
+    ]);
+
+    const EIKEN3_QUESTIONS = buildSet('英検3級', [
+        ["This song is loved (    ) many young people.", ["by", "with", "for", "from"], "受け身（be + 過去分詞）で「〜によって」と行為者を示すのは by です。"],
+        ["I have (    ) been to Hokkaido.", ["never", "ever", "yet", "still"], "現在完了の経験用法で「一度も〜したことがない」は have never been to 〜 です。"],
+        ["Do you know (    ) he lives?", ["where", "what", "which", "who"], "「彼がどこに住んでいるか」なので間接疑問 where he lives にします。"],
+        ["I have lived here (    ) 2015.", ["since", "for", "from", "during"], "現在完了の継続用法で「〜以来」と起点を示すのは since です。"],
+        ["The man (    ) is standing over there is my uncle.", ["who", "which", "whose", "what"], "先行詞が人（The man）で、後ろに動詞が続くので主格の関係代名詞 who を使います。"],
+        ["It is important (    ) us to protect the environment.", ["for", "of", "to", "with"], "It is 〜 for 人 to … で「人が…することは〜だ」です。"],
+        ["My mother told me (    ) my room.", ["to clean", "clean", "cleaning", "cleaned"], "tell 人 to 〜 で「人に〜するように言う」です。"],
+        ["I'm looking forward (    ) you again.", ["to seeing", "to see", "seeing", "see"], "look forward to 〜ing（〜するのを楽しみに待つ）の to は前置詞なので、後ろは動名詞です。"],
+        ["This is the book (    ) I bought yesterday.", ["that", "who", "whose", "what"], "先行詞が物（the book）で、目的格の関係代名詞として that（または which）を使います。"],
+        ["She has a cat (    ) Tama.", ["named", "naming", "names", "to name"], "「タマと名付けられた猫」なので過去分詞 named が後ろから名詞を説明します。"],
+        ["If it (    ) tomorrow, we will stay home.", ["rains", "will rain", "rained", "raining"], "条件を表す if の文では、未来のことでも現在形を使います。"],
+        ["I don't know what (    ).", ["to do", "doing", "do", "did"], "what to do で「何をすべきか」です。"],
+        ["Have you finished your homework (    )?", ["yet", "ago", "since", "never"], "現在完了の疑問文で「もう〜しましたか」は yet を文末に置きます。"],
+        ["The letter was (    ) in English.", ["written", "wrote", "write", "writing"], "受け身（be + 過去分詞）なので write の過去分詞 written です。"],
+        ["He is too tired (    ) walk any more.", ["to", "for", "that", "so"], "too 〜 to … で「あまりに〜なので…できない」です。"],
+        ["A: Would you like some more tea?  B: (    )", ["No, thank you. I've had enough.", "Yes, I'm tea.", "You're welcome.", "Here you are."], "おかわりを勧められて断るときの自然な返事は No, thank you. です。"],
+        ["We need to (    ) the meeting because the teacher is sick.", ["cancel", "invite", "borrow", "wear"], "先生が病気なので会議を「中止する」cancel が適切です。"],
+        ["Look at the boy (    ) soccer in the park.", ["playing", "plays", "played", "to play"], "「サッカーをしている少年」なので現在分詞 playing が後ろから名詞を説明します。"],
+        ["My father is (    ) busy that he can't take a vacation.", ["so", "too", "very", "such"], "so 〜 that … で「とても〜なので…」です。"],
+        ["A: How about going to the movies?  B: That (    ) great.", ["sounds", "listens", "hears", "speaks"], "相手の提案に「それはいいね」と答えるときは That sounds great. です。"]
+    ]);
+
+    const EIKEN_P2_QUESTIONS = buildSet('英検準2級', [
+        ["The bridge (    ) 100 years ago is still used today.", ["built", "building", "builds", "to build"], "「100年前に建てられた橋」なので過去分詞 built が後ろから名詞を説明します。"],
+        ["I wish I (    ) more time to study.", ["had", "have", "will have", "having"], "I wish の後ろで現在の事実に反する願望を言うときは過去形（仮定法過去）を使います。"],
+        ["She suggested (    ) to the park.", ["going", "to go", "go", "gone"], "suggest は動名詞を目的語にとります（suggest 〜ing）。"],
+        ["He apologized (    ) being late.", ["for", "to", "of", "with"], "apologize for 〜 で「〜のことで謝る」です（謝る相手には to を使います）。"],
+        ["By the time we arrived, the train (    ).", ["had left", "has left", "leaves", "will leave"], "過去のある時点（到着した時）よりも前に完了していたことは過去完了（had + 過去分詞）です。"],
+        ["The teacher made us (    ) the essay again.", ["write", "to write", "writing", "written"], "使役動詞 make は make 人 + 動詞の原形 の形をとります。"],
+        ["This is the town (    ) I was born.", ["where", "which", "what", "who"], "後ろが完全な文（I was born）で場所を表すので関係副詞 where を使います。"],
+        ["I'm all wet. I (    ) have brought an umbrella.", ["should", "can", "may", "will"], "should have + 過去分詞で「〜すべきだった（のにしなかった）」という後悔を表します。"],
+        ["The company decided to (    ) more workers because business was growing.", ["hire", "fire", "retire", "refuse"], "業績が伸びているので従業員を「雇う」hire が適切です。"],
+        ["It was (    ) a hot day that we went swimming.", ["such", "so", "very", "too"], "such a + 形容詞 + 名詞 + that … で「とても〜な…なので」です。名詞が続くので so ではなく such です。"],
+        ["Not only Ken but also his friends (    ) interested in the project.", ["are", "is", "was", "has"], "not only A but also B が主語のときは、動詞を B（his friends：複数）に合わせます。"],
+        ["He spoke slowly (    ) everyone could understand him.", ["so that", "even if", "as if", "unless"], "so that 〜 can/could … で「〜が…できるように」と目的を表します。"],
+        ["The number of tourists (    ) increasing every year.", ["is", "are", "have", "were"], "the number of 〜（〜の数）は単数扱いです。a number of 〜（たくさんの〜）は複数扱いなので区別しましょう。"],
+        ["I'm used to (    ) up early.", ["getting", "get", "got", "be getting"], "be used to 〜ing で「〜することに慣れている」。この to は前置詞です。"],
+        ["Please (    ) this form and give it to the receptionist.", ["fill out", "take off", "give up", "look after"], "書類に「記入する」は fill out（fill in）です。"],
+        ["My grandmother (    ) after my little brother while my parents are at work.", ["looks", "takes", "gets", "makes"], "look after 〜 で「〜の世話をする」です。"],
+        ["She was (    ) to see her old friend at the station.", ["surprised", "surprising", "surprise", "surprisingly"], "人が「驚いた」は surprised。surprising は「（物事が）驚くべき」です。"],
+        ["Each of the students (    ) a computer.", ["has", "have", "having", "to have"], "each of 〜 は単数扱いなので has を使います。"],
+        ["A: I'm sorry I broke your cup.  B: (    )", ["Don't worry about it.", "You're welcome.", "Me too.", "Here you are."], "謝罪に対して「気にしないで」と答えるのが自然です。You're welcome. はお礼への返事です。"],
+        ["I'd rather (    ) at home tonight.", ["stay", "staying", "to stay", "stayed"], "would rather + 動詞の原形 で「むしろ〜したい」です。"]
+    ]);
+
+    const EIKEN2_QUESTIONS = buildSet('英検2級', [
+        ["(    ) the bad weather, the game was held as scheduled.", ["Despite", "Although", "Because", "Unless"], "後ろが名詞（the bad weather）なので前置詞 Despite（〜にもかかわらず）を使います。Although は後ろに文が続きます。"],
+        ["If I had known the truth yesterday, I (    ) him then.", ["would have helped", "would help", "will help", "had helped"], "過去の事実に反する仮定は仮定法過去完了：If + had + 過去分詞, would have + 過去分詞 です。"],
+        ["The new rule will (    ) effect next month.", ["take", "make", "bring", "give"], "take effect で「（法律・規則などが）効力を生じる、実施される」です。"],
+        ["The scientist's discovery had a great (    ) on modern medicine.", ["impact", "income", "instinct", "instrument"], "have an impact on 〜 で「〜に影響を与える」です。"],
+        ["Hardly (    ) I closed my eyes when the phone rang.", ["had", "did", "was", "have"], "Hardly had S + 過去分詞 when … で「〜するとすぐに…」。否定語が文頭に来ると倒置が起こります。"],
+        ["She is said (    ) a famous singer when she was young.", ["to have been", "to be", "being", "that she was"], "述語（is said：現在）より前の時点のことなので完了不定詞 to have been を使います。"],
+        ["The government plans to (    ) the use of plastic bags.", ["reduce", "reveal", "remind", "resemble"], "レジ袋の使用を「減らす」reduce が適切です。"],
+        ["(    ) you need any help, please let me know.", ["Should", "Would", "Could", "Unless"], "If you should need 〜 の if を省略すると Should が文頭に出ます（倒置）。「万一〜なら」の意味です。"],
+        ["It is no use (    ) over spilt milk.", ["crying", "cry", "cried", "being cried"], "It is no use 〜ing で「〜しても無駄だ」。「覆水盆に返らず」にあたることわざです。"],
+        ["The more you practice, (    ) you will become.", ["the better", "better", "the best", "best"], "The 比較級 〜, the 比較級 … で「〜すればするほど…」です。"],
+        ["I'll lend you the book (    ) you promise to return it by Friday.", ["as long as", "even though", "so that", "in case"], "as long as 〜 で「〜しさえすれば、〜する限りは」と条件を表します。"],
+        ["The meeting was (    ) because many members could not attend.", ["postponed", "promoted", "persuaded", "predicted"], "多くのメンバーが出席できないので会議が「延期された」postponed が適切です。"],
+        ["He was made (    ) for two hours.", ["to wait", "wait", "waiting", "waited"], "使役の make を受け身にすると、動詞の原形が to 不定詞になります（be made to 〜）。"],
+        ["We have to (    ) with the problem as soon as possible.", ["deal", "look", "put", "turn"], "deal with 〜 で「〜に対処する」です。"],
+        ["Not until he lost his health (    ) realize its importance.", ["did he", "he did", "he does", "does he"], "Not until 〜 が文頭に来ると、主節が倒置（did he realize）になります。「〜して初めて…した」の意味です。"],
+        ["This ticket is (    ) for one year from the date of purchase.", ["valid", "vacant", "vital", "vague"], "チケットなどが「有効な」は valid です。"],
+        ["The building, (    ) roof was damaged by the storm, is being repaired.", ["whose", "which", "that", "of which"], "「その屋根が」と所有を表すので関係代名詞 whose を使います（the roof of which でも同じ意味）。"],
+        ["I would appreciate it (    ) you could reply soon.", ["if", "that", "when", "whether"], "I would appreciate it if 〜 で「〜していただけるとありがたいです」という丁寧な依頼です。"],
+        ["This medicine will (    ) your headache.", ["relieve", "reserve", "reject", "remain"], "痛みを「和らげる」は relieve です。"],
+        ["She has a (    ) for languages; she speaks five fluently.", ["talent", "tendency", "temper", "tension"], "have a talent for 〜 で「〜の才能がある」です。"]
+    ]);
 
     const BOKI_QUESTIONS = [
         { title: "【日商簿記 問1】損益計算書（P/L）において「売上高」から「売上原価」を控除した利益はどれか。", options: ["売上総利益", "営業利益", "経常利益", "当期純利益"], correctIndex: 0, explanation: "売上高 － 売上原価 ＝ 売上総利益（粗利益）です。" },
@@ -436,18 +507,26 @@
         },
 
         // 2. 語学・国際系
-        {
-            id: 'eiken',
-            passLine: 70,
-            passNote: '級・技能ごとの CSE スコアで判定されるため目安',
-            name: '実用英語技能検定 (英検)',
+        ...[
+            ['eiken4', '4級', EIKEN4_QUESTIONS, '中学中級程度。基本的な語彙・文法、身近な会話'],
+            ['eiken3', '3級', EIKEN3_QUESTIONS, '中学卒業程度。現在完了・受け身・関係代名詞など'],
+            ['eikenp2', '準2級', EIKEN_P2_QUESTIONS, '高校中級程度。仮定法・分詞・熟語など日常生活に必要な英語'],
+            ['eiken2', '2級', EIKEN2_QUESTIONS, '高校卒業程度。倒置・仮定法過去完了など社会生活に必要な英語']
+        ].map(([id, level, questions, desc]) => ({
+            id,
+            group: 'eiken',
+            groupName: '実用英語技能検定 (英検)',
+            levelName: '級',
+            levelLabel: level,
+            passLine: 60,
+            passNote: 'CSE スコアで判定され、正答率6割程度が合格の目安',
+            name: `実用英語技能検定 ${level}`,
             category: '語学・国際',
-            badge: '全20問収録',
-            color: 'emerald',
             icon: 'fa-language',
-            desc: '実用的な英語力（リーディング・ライティング・語彙）の検証',
-            questions: EIKEN_QUESTIONS
-        },
+            groupDesc: '語彙・文法・会話表現を級ごとに演習（筆記の語彙・文法問題形式）',
+            desc,
+            questions
+        })),
         {
             id: 'toeic',
             passLine: 70,
