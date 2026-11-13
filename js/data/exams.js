@@ -100,6 +100,29 @@
         ["I'd rather (    ) at home tonight.", ["stay", "staying", "to stay", "stayed"], "would rather + 動詞の原形 で「むしろ〜したい」です。"]
     ]);
 
+    const EIKEN_P2PLUS_QUESTIONS = buildSet('英検準2級プラス', [
+        ["The concert was (    ) because of heavy rain.", ["canceled", "cancel", "canceling", "cancels"], "コンサートは「中止された」ので受け身（be + 過去分詞）の canceled にします。"],
+        ["I'm thinking (    ) studying abroad next year.", ["about", "to", "with", "at"], "think about 〜ing で「〜することを考えている」です（think of 〜ing も同じ意味）。"],
+        ["If I (    ) you, I would accept the offer.", ["were", "am", "will be", "have been"], "現在の事実に反する仮定は仮定法過去。be 動詞は主語にかかわらず were を使うのが基本です。"],
+        ["She has been studying English (    ) she was ten.", ["since", "for", "during", "while"], "「10歳のときから（ずっと）」と起点を表すので since を使います。"],
+        ["The museum (    ) we visited last week was very interesting.", ["that", "where", "what", "whose"], "visit は目的語をとる動詞なので、目的格の関係代名詞 that（which）を使います。where は使えません。"],
+        ["Could you tell me how (    ) to the city hall?", ["to get", "getting", "get", "got"], "how to 〜 で「〜の仕方」。how to get to 〜 は道をたずねる定番表現です。"],
+        ["It took me three hours (    ) the report.", ["to finish", "finishing", "finish", "finished"], "It takes 人 時間 to 〜 で「人が〜するのに（時間が）かかる」です。"],
+        ["The new smartphone is very (    ); many people want to buy it.", ["popular", "private", "polite", "patient"], "多くの人が買いたがっているので「人気がある」popular が適切です。"],
+        ["We should (    ) energy by turning off lights we are not using.", ["save", "spend", "waste", "borrow"], "使っていない電気を消してエネルギーを「節約する」save が適切です。"],
+        ["My parents let me (    ) to the concert alone.", ["go", "to go", "going", "went"], "使役動詞 let は let 人 + 動詞の原形 の形で「人に〜させてあげる」です。"],
+        ["This is the most exciting movie I have (    ) seen.", ["ever", "never", "yet", "already"], "最上級 + I have ever 〜 で「今まで〜した中で最も…」です。"],
+        ["He walked into the room without (    ) a word.", ["saying", "say", "to say", "said"], "前置詞 without の後ろは動名詞です。without 〜ing で「〜せずに」。"],
+        ["A: Do you mind if I open the window?  B: (    )", ["Not at all. Go ahead.", "You're welcome.", "Here you are.", "Me neither."], "Do you mind if 〜? は「〜してもかまいませんか」。かまわないときは Not at all.（全くかまいません）と答えます。"],
+        ["Please (    ) care of yourself.", ["take", "make", "have", "give"], "take care of 〜 で「〜を大事にする、〜の世話をする」です。"],
+        ["The train was (    ) by thirty minutes because of the accident.", ["delayed", "decided", "developed", "described"], "事故のため電車が「遅れた」は be delayed です。by thirty minutes は「30分」という差を表します。"],
+        ["Neither my brother (    ) I like spicy food.", ["nor", "or", "and", "but"], "neither A nor B で「AもBも〜ない」です。"],
+        ["She is one of the (    ) famous writers in Japan.", ["most", "more", "much", "very"], "one of the + 最上級 + 複数名詞 で「最も〜な…の一人」です。"],
+        ["I'll call you as soon as I (    ) at the station.", ["arrive", "will arrive", "arrived", "arriving"], "時を表す as soon as の後ろでは、未来のことでも現在形を使います。"],
+        ["The teacher gave us some useful (    ) on how to write a good essay.", ["advice", "advise", "advices", "advised"], "advice（助言）は数えられない名詞なので -s を付けません。advise は動詞です。"],
+        ["I ran (    ) an old friend at the supermarket yesterday.", ["into", "over", "out", "away"], "run into 〜 で「〜に偶然出会う」です。"]
+    ]);
+
     const EIKEN2_QUESTIONS = buildSet('英検2級', [
         ["(    ) the bad weather, the game was held as scheduled.", ["Despite", "Although", "Because", "Unless"], "後ろが名詞（the bad weather）なので前置詞 Despite（〜にもかかわらず）を使います。Although は後ろに文が続きます。"],
         ["If I had known the truth yesterday, I (    ) him then.", ["would have helped", "would help", "will help", "had helped"], "過去の事実に反する仮定は仮定法過去完了：If + had + 過去分詞, would have + 過去分詞 です。"],
@@ -511,6 +534,7 @@
             ['eiken4', '4級', EIKEN4_QUESTIONS, '中学中級程度。基本的な語彙・文法、身近な会話'],
             ['eiken3', '3級', EIKEN3_QUESTIONS, '中学卒業程度。現在完了・受け身・関係代名詞など'],
             ['eikenp2', '準2級', EIKEN_P2_QUESTIONS, '高校中級程度。仮定法・分詞・熟語など日常生活に必要な英語'],
+            ['eikenp2plus', '準2級プラス', EIKEN_P2PLUS_QUESTIONS, '2025年度に新設された、準2級と2級の間の級。社会的な話題も扱う'],
             ['eiken2', '2級', EIKEN2_QUESTIONS, '高校卒業程度。倒置・仮定法過去完了など社会生活に必要な英語']
         ].map(([id, level, questions, desc]) => ({
             id,

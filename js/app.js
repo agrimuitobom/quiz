@@ -601,7 +601,8 @@
                 category: first.category,
                 icon: first.icon,
                 desc: first.groupDesc,
-                badge: `${card.levels.length}${first.levelName || '級'}` + (counts.length === 1 ? `・各${counts[0]}問` : ''),
+                // 「4級」と読み間違えないよう「4つの級」と表記する
+                badge: `${card.levels.length}つの${first.levelName || '級'}` + (counts.length === 1 ? `・各${counts[0]}問` : ''),
                 questions: selected.questions
             });
         });
