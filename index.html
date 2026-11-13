@@ -119,10 +119,10 @@
                     </div>
                     <div class="relative z-10 max-w-2xl">
                         <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-sm mb-3">
-                            <i class="fa-solid fa-bolt mr-1 text-amber-300"></i> 9検定・各20問を収録
+                            <i class="fa-solid fa-bolt mr-1 text-amber-300"></i> 11種類の検定（16の級・区分）を収録
                         </span>
                         <h2 class="text-2xl sm:text-3xl font-extrabold mb-3">資格・検定の学習をここ一つで</h2>
-                        <p class="text-blue-100 text-sm mb-6">IT・語学・ビジネス・教養の練習問題に加え、自分で問題を作って学習することもできます。苦手な問題は復習機能で繰り返し解きましょう。</p>
+                        <p class="text-blue-100 text-sm mb-6">IT・語学・ビジネス・教養・農業・測量の練習問題に加え、自分で問題を作って学習することもできます。苦手な問題は復習機能で繰り返し解きましょう。</p>
                         
                         <!-- タスクタイトル入力フォーム -->
                         <form id="task-form" onsubmit="handleAddTask(event)" class="flex flex-col sm:flex-row gap-2">
@@ -237,6 +237,9 @@
                         <button type="button" data-category="教養・学術・その他" onclick="filterCategory(this.dataset.category)" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold transition shrink-0 bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
                             <i class="fa-solid fa-book-bookmark mr-1"></i> 教養・学術・デザイン
                         </button>
+                        <button type="button" data-category="農業・測量・技術" onclick="filterCategory(this.dataset.category)" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold transition shrink-0 bg-white border border-slate-200 text-slate-600 hover:bg-slate-100">
+                            <i class="fa-solid fa-tractor mr-1"></i> 農業・測量・技術
+                        </button>
                         <button type="button" data-category="CUSTOM" onclick="filterCategory(this.dataset.category)" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold transition shrink-0 bg-white border border-slate-200 text-amber-700 hover:bg-amber-50">
                             <i class="fa-solid fa-user-pen mr-1"></i> 自作・カスタム検定
                         </button>
@@ -280,6 +283,7 @@
                                 <option value="語学・国際">語学・国際</option>
                                 <option value="ビジネス・会計・法律">ビジネス・会計・法律</option>
                                 <option value="教養・学術・その他">教養・学術・その他</option>
+                                <option value="農業・測量・技術">農業・測量・技術</option>
                             </select>
                         </div>
                         <button onclick="startExamByCategory()" class="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center space-x-2">
@@ -649,6 +653,7 @@
                             <option value="語学・国際">語学・国際</option>
                             <option value="ビジネス・会計・法律">ビジネス・会計・法律</option>
                             <option value="教養・学術・その他" selected>教養・学術・その他</option>
+                            <option value="農業・測量・技術">農業・測量・技術</option>
                         </select>
                     </div>
                 </div>
